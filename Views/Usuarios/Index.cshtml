@@ -1,0 +1,144 @@
+﻿@model IEnumerable<webBotica2.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Estilos {
+    <style>
+        .btn-inhabilitar {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+        }
+
+            .btn-inhabilitar:hover {
+                background-color: #c0392b;
+                transform: scale(1.05);
+            }
+
+        .btn-editar {
+            background-color: #3498db; /* azul moderno */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+            .btn-editar:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+
+        .btn-registrar {
+            background-color: #2ecc71; /* verde moderno */
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-registrar:hover {
+                background-color: #27ae60;
+                transform: scale(1.05);
+            }
+
+        .btn-cancelar {
+            background-color: #6c757d; /* gris Bootstrap */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-cancelar:hover {
+                background-color: #5a6268;
+                transform: scale(1.05);
+            }
+
+        .btn-guardar {
+            background-color: #28a745; /* verde Bootstrap */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-guardar:hover {
+                background-color: #218838;
+                transform: scale(1.05);
+            }
+    </style>
+}
+<h2 class="text-center mb-4">Lista de Usuarios</h2>
+
+<div class="mb-3 text-start">
+    <a class="btn btn-success" asp-action="Create">Registrar Usuario</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle" style="font-size: 13px;">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Rol</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Usuario1)</td>
+                            <td>
+                                <input type="password" value="@item.Contraseña" readonly class="form-control-plaintext text-muted" />
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.IdRolNavigation.Rol1)</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.IdUser">Editar</a>
+                                    <form asp-action="Delete" asp-route-id="@item.IdUser" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de eliminar?'); ">
+                                        <button type="submit" class="btn btn-danger btn-sm">Deshabilitar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

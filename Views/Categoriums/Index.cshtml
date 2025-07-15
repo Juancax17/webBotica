@@ -1,0 +1,39 @@
+﻿@model IEnumerable<webBotica2.Models.Categorium>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center mb-4">Lista de Categorías</h2>
+
+<div class="d-flex justify-content-start mb-3">
+    <a class="btn btn-success" asp-action="Create">Crear nueva Categoría</a>
+</div>
+
+<table class="table table-bordered table-hover shadow-sm" style="font-size: 14px;">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@(item.Estado ? "Habilitado" : "Deshabilitado")</td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-primary btn-sm">Editar</a>
+                    <form asp-action="Delete" asp-route-id="@item.IdCategoria" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Está seguro de deshabilitar esta categoría?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Deshabilitar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

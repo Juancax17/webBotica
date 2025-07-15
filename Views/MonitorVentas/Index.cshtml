@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Venta>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📊 Monitor de Ventas</h2>
+
+    <form method="get" asp-action="BuscarVenta" class="mb-3">
+        <div class="row justify-content-xl-center">
+            <div class="col-md-4">
+                <input type="text" name="filtro" class="form-control" placeholder="Buscar por DNI, RUC o ID de venta..." value="@ViewBag.Filtro" />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+            </div>
+            <div class="col-auto">
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Refrescar ventas">
+                    🔄
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive shadow rounded">
+        <table class="table table-hover align-middle table-bordered">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model)
+                {
+                    <tr class="text-center">
+                        <td>@venta.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@venta.IdClienteNavigation?.Nombre</td>
+                        <td><strong>@venta.Total.ToString("C")</strong></td>
+                        <td>
+                            <span class="badge @(venta.EstadoVenta == "Pagado" ? "bg-success" :
+                                            venta.EstadoVenta == "Pendiente" ? "bg-warning text-dark" :
+                                            venta.EstadoVenta == "Cancelado" ? "bg-danger" : "bg-secondary")">
+                            @venta.EstadoVenta
+                        </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-@venta.IdVenta">
+                                Ver Detalle
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MODALES DE DETALLE -->
+    @foreach (var venta in Model)
+    {
+        <div class="modal fade" id="modal-@venta.IdVenta" tabindex="-1" aria-labelledby="modalLabel-@venta.IdVenta" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel-@venta.IdVenta">🧾 Detalle de Venta (@venta.Fecha.ToShortDateString())</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Cliente:</strong> @venta.IdClienteNavigation?.Nombre</p>
+                        <p><strong>Estado:</strong> @venta.EstadoVenta</p>
+
+                        @if (venta.DetalleVenta != null && venta.DetalleVenta.Any())
+                        {
+                            <table class="table table-sm  mt-3">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio Unitario</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    @foreach (var item in venta.DetalleVenta)
+                                    {
+                                        <tr>
+                                            <td>@item.IdProdNavigation?.Nombre</td>
+                                            <td>@item.Cant</td>
+                                            <td>@item.PrecioVenta.ToString("C")</td>
+                                            <td>@item.Subtotal.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning text-center mt-3">No hay productos registrados en esta venta.</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <span class="m-sm-auto fw-bold">Total: @venta.Total.ToString("C")</span>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

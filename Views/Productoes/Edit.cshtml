@@ -1,0 +1,192 @@
+﻿@model webBotica2.Models.Producto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@section Estilos {
+    <style>
+        .btn-inhabilitar {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+        }
+
+            .btn-inhabilitar:hover {
+                background-color: #c0392b;
+                transform: scale(1.05);
+            }
+
+        .btn-editar {
+            background-color: #3498db; /* azul moderno */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+            .btn-editar:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+
+        .btn-registrar {
+            background-color: #2ecc71; /* verde moderno */
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-registrar:hover {
+                background-color: #27ae60;
+                transform: scale(1.05);
+            }
+
+        .btn-cancelar {
+            background-color: #6c757d; /* gris Bootstrap */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-cancelar:hover {
+                background-color: #5a6268;
+                transform: scale(1.05);
+            }
+
+        .btn-guardar {
+            background-color: #28a745; /* verde Bootstrap */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-guardar:hover {
+                background-color: #218838;
+                transform: scale(1.05);
+            }
+    </style>
+}
+<h2 class="text-center mb-4">Editar Producto</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input type="hidden" asp-for="IdProd" />
+
+                    <div class="mb-3">
+                        <label asp-for="Sku" class="form-label">SKU</label>
+                        <input asp-for="Sku" class="form-control" />
+                        <span asp-validation-for="Sku" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Presentacion" class="form-label">Descripción</label>
+                        <input asp-for="Presentacion" class="form-control" />
+                        <span asp-validation-for="Presentacion" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PrecioCompra" class="form-label">Precio Compra</label>
+                        <input asp-for="PrecioCompra" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" />
+                        <span asp-validation-for="PrecioCompra" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PrecioVenta" class="form-label">Precio Venta</label>
+                        <input asp-for="PrecioVenta" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" />
+                        <span asp-validation-for="PrecioVenta" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FechaVen" class="form-label">F. Vencimiento</label>
+                        <input asp-for="FechaVen" class="form-control" type="date" />
+                        <span asp-validation-for="FechaVen" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Stock" class="form-label">Stock</label>
+                        <input asp-for="Stock" class="form-control" />
+                        <span asp-validation-for="Stock" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IdProveedor" class="form-label">Proveedor</label>
+                        <select asp-for="IdProveedor" class="form-select" asp-items="ViewBag.IdProveedor"></select>
+                        <span asp-validation-for="IdProveedor" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IdCategoria" class="form-label">Categoría</label>
+                        <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria"></select>
+                        <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IdMarca" class="form-label">Marca</label>
+                        <select asp-for="IdMarca" class="form-select" asp-items="ViewBag.IdMarca"></select>
+                        <span asp-validation-for="IdMarca" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Foto" class="form-label">Foto</label>
+                        <input asp-for="Foto" class="form-control" />
+                        <span asp-validation-for="Foto" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Estado" class="form-check-input" type="checkbox" />
+                        <label class="form-check-label" asp-for="Estado">Activo</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<webBotica2.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="text-center mb-4">Lista de Clientes</h2>
+
+<div class="d-flex justify-content-start mb-3">
+    <a class="btn btn-success" asp-action="Create">➕ Nuevo Cliente</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover shadow-sm" style="font-size: 14px; min-width: 1200px;">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Fecha Nac.</th>
+                <th>Dirección</th>
+                <th>Activo</th>
+                <th>Registrado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Documento</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.ApellidoPaterno</td>
+                    <td>@item.ApellidoMaterno</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Correo</td>
+                    <td>@item.FechaNac?.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Direccion</td>
+                    <td>@(item.Estado ? "✅" : "❌")</td>
+                    <td>@(item.EsRegistrado ? "Sí" : "No")</td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-primary btn-sm">✏️ Editar</a>
+                            <form asp-action="Delete" asp-route-id="@item.IdCliente" method="post" onsubmit="return confirm('¿Está seguro de deshabilitar este cliente?');" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑️ Deshabilitar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

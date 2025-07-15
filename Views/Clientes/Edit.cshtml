@@ -1,0 +1,84 @@
+﻿@model webBotica2.Models.Cliente
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<<h2 class="text-center mb-4">✏️ Editar Cliente</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <input type="hidden" asp-for="IdCliente" />
+
+                    <div class="mb-3">
+                        <label asp-for="Documento" class="form-label">Documento</label>
+                        <input asp-for="Documento" class="form-control" />
+                        <span asp-validation-for="Documento" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ApellidoPaterno" class="form-label">Apellido Paterno</label>
+                        <input asp-for="ApellidoPaterno" class="form-control" />
+                        <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ApellidoMaterno" class="form-label">Apellido Materno</label>
+                        <input asp-for="ApellidoMaterno" class="form-control" />
+                        <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Telefono" class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Correo" class="form-label">Correo</label>
+                        <input asp-for="Correo" class="form-control" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FechaNac" class="form-label">Fecha de Nacimiento</label>
+                        <input asp-for="FechaNac" class="form-control" type="date" />
+                        <span asp-validation-for="FechaNac" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Direccion" class="form-label">Dirección</label>
+                        <input asp-for="Direccion" class="form-control" />
+                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" asp-for="Estado" />
+                        <label class="form-check-label" asp-for="Estado">Estado</label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" asp-for="EsRegistrado" />
+                        <label class="form-check-label" asp-for="EsRegistrado">Es Registrado</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">💾 Guardar</button>
+                        <a asp-action="Index" class="btn btn-secondary">↩️ Volver</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

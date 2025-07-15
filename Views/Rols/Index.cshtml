@@ -1,0 +1,40 @@
+﻿@model IEnumerable<webBotica2.Models.Rol>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center mb-4">Lista de Roles</h2>
+
+<div class="d-flex justify-content-start mb-3">
+    <a class="btn btn-success" asp-action="Create">Crear nuevo Rol</a>
+</div>
+
+<table class="table table-bordered table-hover shadow-sm" style="font-size: 14px;">
+    <thead class="table-dark">
+        <tr>
+            <th>Rol</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Rol1)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                <td>@(item.Estado ? "Habilitado" : "Deshabilitado")</td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.IdRol" class="btn btn-primary btn-sm">Editar</a>
+                    <form asp-action="Delete" asp-route-id="@item.IdRol" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Está seguro de Deshabilitar este rol?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Deshabilitar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

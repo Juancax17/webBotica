@@ -1,0 +1,151 @@
+﻿@model webBotica2.Models.Proveedore
+
+@{
+    ViewData["Title"] = "Create";
+}
+@section Estilos {
+    <style>
+        .btn-inhabilitar {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+        }
+
+            .btn-inhabilitar:hover {
+                background-color: #c0392b;
+                transform: scale(1.05);
+            }
+
+        .btn-editar {
+            background-color: #3498db; /* azul moderno */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+            .btn-editar:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+
+        .btn-registrar {
+            background-color: #2ecc71; /* verde moderno */
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-registrar:hover {
+                background-color: #27ae60;
+                transform: scale(1.05);
+            }
+
+        .btn-cancelar {
+            background-color: #6c757d; /* gris Bootstrap */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-cancelar:hover {
+                background-color: #5a6268;
+                transform: scale(1.05);
+            }
+
+        .btn-guardar {
+            background-color: #28a745; /* verde Bootstrap */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-guardar:hover {
+                background-color: #218838;
+                transform: scale(1.05);
+            }
+    </style>
+}
+<h2 class="text-center mb-4">Crear Nuevo Proveedor</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Ruc" class="form-label">RUC</label>
+                        <input asp-for="Ruc" class="form-control" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        <span asp-validation-for="Ruc" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="RazonSocial" class="form-label">Razón Social</label>
+                        <input asp-for="RazonSocial" class="form-control" />
+                        <span asp-validation-for="RazonSocial" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Tipo" class="form-label">Tipo</label>
+                        <input asp-for="Tipo" class="form-control" />
+                        <span asp-validation-for="Tipo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Telefono" class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Correo" class="form-label">Correo</label>
+                        <input asp-for="Correo" class="form-control" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="IdLaboratorio" class="form-label">Laboratorio</label>
+                        <select asp-for="IdLaboratorio" class="form-select" asp-items="ViewBag.IdLaboratorio"></select>
+                        <span asp-validation-for="IdLaboratorio" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Registrar</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

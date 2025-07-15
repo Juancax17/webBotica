@@ -1,0 +1,348 @@
+﻿
+
+@model webBotica2.Models.RegistrarVenta
+@using System.Text.Json
+
+@{
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    } 
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap JS (y Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    ViewData["Title"] = "Registrar Venta";
+    var productosJson = JsonSerializer.Serialize((List<webBotica2.Models.ProductoVM>)ViewBag.ProductosModal);
+}
+
+
+
+<form asp-action="Index" method="post">
+    <div class="row">
+        <!-- Columna izquierda: Cliente + Detalle -->
+        <div class="col-md-8">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <!-- CLIENTE -->
+            <div class="card mb-3">
+                <div class="card-header">Datos del Cliente</div>
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col-md-5 mb-3">
+                            <label asp-for="TipoDocumento" class="form-label">Tipo de Documento</label>
+                            <select asp-for="TipoDocumento" class="form-control" asp-items="Model.TiposDocumento" id="TipoDocumento"></select>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label asp-for="NumeroDocumento" class="form-label">Número de Documento</label>
+                            <input asp-for="NumeroDocumento" class="form-control" maxlength="8" id="NumeroDocumento"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <button type="button" class="btn btn-primary" id="btnBuscarDoc">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETALLE DE PRODUCTOS -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Detalle de Productos</span>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#modalProductos">
+                        Agregar Producto
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="detalleVentaBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Botón Final -->
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Registrar Venta</button>
+            </div>
+        </div>
+
+        <!-- Columna derecha: Resumen -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Resumen</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="NombreCliente" class="form-label">Nombre / Razón Social</label>
+                        <input id="NombreCliente" name="NombreCliente" class="form-control" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Telefono" class="form-label">Teléfono</label>
+                        <input id="Telefono" name="Telefono" class="form-control" style="border-radius: 8px;" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="9" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input id="Email" name="Email" class="form-control" style="border-radius: 8px;" maxlength="50" />
+                    </div>
+
+                    <p><strong>Total:</strong> S/ <span id="totalVenta">0.00</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- MODAL DE PRODUCTOS -->
+<div class="modal fade" id="modalProductos" tabindex="-1" aria-labelledby="modalProductosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="buscador" class="form-control mb-3" placeholder="Buscar por nombre o SKU" oninput="filtrarProductos()">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductosModalBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+    let productos = @Html.Raw(productosJson);
+    let index = 0;
+
+    function cargarProductosModal() {
+        const tbody = document.getElementById("tablaProductosModalBody");
+        tbody.innerHTML = "";
+
+        productos.forEach(p => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${p.Sku}</td>
+                    <td>${p.Nombre}</td>
+                    <td>
+                        <input type="number" class="form-control" value="${p.Precio}" disabled />
+                    </td>
+                    <td>${p.Stock} </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary"
+                                data-id="${p.Id}"
+                                data-nombre="${p.Nombre.replace(/"/g, '&quot;')}"
+                                data-precio="${p.Precio}"
+                                onclick="seleccionarProducto(this)">
+                            Seleccionar
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+            function seleccionarProducto(btn) {
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        const precio = parseFloat(btn.dataset.precio);
+
+        const filas = document.querySelectorAll("#detalleVentaBody tr");
+
+        // Si ya existe el producto, solo aumenta la cantidad
+        for (const fila of filas) {
+            const inputHidden = fila.querySelector("input[name$='.IdProd']");
+            if (inputHidden && inputHidden.value === id) {
+                const inputCantidad = fila.querySelector("input[name$='.Cant']");
+                inputCantidad.value = parseInt(inputCantidad.value) + 1;
+
+                const precioUnitario = parseFloat(fila.querySelector("input[name$='.PrecioVenta']").value);
+                const nuevoSubtotal = parseFloat(inputCantidad.value) * precioUnitario;
+                fila.querySelector("input[name$='.Subtotal']").value = nuevoSubtotal.toFixed(2);
+
+                actualizarTotal();
+                bootstrap.Modal.getInstance(document.getElementById('modalProductos')).hide();
+                return;
+            }
+        }
+
+        // Crear nueva fila si no existe
+        const fila = `
+            <tr>
+                <td>
+                    <input type="hidden" name="Detalles[${index}].IdProd" value="${id}" />
+                    ${nombre}
+                </td>
+                <td>
+                    <input type="number" name="Detalles[${index}].Cant" value="1" class="form-control cantidad" />
+                </td>
+                <td>
+                    <input type="number" name="Detalles[${index}].PrecioVenta" value="${precio}" step="0.01" class="form-control precio" />
+                </td>
+                <td>
+                    <input type="number" name="Detalles[${index}].Subtotal" value="${precio.toFixed(2)}" readonly class="form-control subtotal" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); actualizarTotal();">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("detalleVentaBody").insertAdjacentHTML('beforeend', fila);
+        index++;
+        actualizarTotal();
+        bootstrap.Modal.getInstance(document.getElementById('modalProductos')).hide();
+    }
+
+
+
+
+    function filtrarProductos() {
+        const filtro = document.getElementById("buscador").value.toLowerCase();
+        const filas = document.querySelectorAll("#tablaProductosModalBody tr");
+        filas.forEach(fila => {
+            const texto = fila.innerText.toLowerCase();
+            fila.style.display = texto.includes(filtro) ? "" : "none";
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("modalProductos");
+        modal.addEventListener("show.bs.modal", cargarProductosModal);
+    });
+
+    document.addEventListener("input", function (e) {
+        if (e.target.classList.contains("cantidad") || e.target.classList.contains("precio")) {
+            const row = e.target.closest("tr");
+            const cantidad = parseFloat(row.querySelector(".cantidad")?.value || 0);
+            const precio = parseFloat(row.querySelector(".precio")?.value || 0);
+            const subtotal = (cantidad * precio).toFixed(2);
+            row.querySelector(".subtotal").value = subtotal;
+            actualizarTotal();
+        }
+    });
+
+    function actualizarTotal() {
+        let total = 0;
+        document.querySelectorAll(".subtotal").forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById("totalVenta").innerText = total.toFixed(2);
+    }
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tipoDoc = document.getElementById("TipoDocumento");
+        const numeroDoc = document.getElementById("NumeroDocumento");
+
+        tipoDoc.addEventListener("change", function () {
+            const selected = this.value;
+
+            // Define longitudes máximas según el tipo
+            const maxPorTipo = {
+                "DNI": 8,
+                "RUC": 11,
+                "CE": 9,
+                "PASAPORTE": 12
+            };
+
+            numeroDoc.value = ""; // opcional: limpiar
+            numeroDoc.setAttribute("maxlength", maxPorTipo[selected] || 20);
+        });
+    });
+</script>
+
+<script>
+    $('#btnBuscarDoc').click(function () {
+        const tipo = $('#TipoDocumento').val();
+        const numero = $('#NumeroDocumento').val().trim();
+
+        if (!tipo || !numero) {
+            alert("Debe seleccionar un tipo de documento y un número.");
+            return;
+        }
+
+        let url = '';
+        if (tipo === 'DNI') {
+            url = `/ClienteAPI/ConsultarNombrePorDni?dni=${numero}`;
+        } else if (tipo === 'RUC') {
+            url = `/ClienteAPI/ConsultarRazonSocialPorRuc?ruc=${numero}`;
+        }
+
+        // Consulta a RENIEC o SUNAT
+        $.get(url)
+            .done(function (data) {
+                $('#NombreCliente').val(data);
+
+                // Consulta a la base de datos local
+                $.get('/RegistrarVenta/EnviarTelefono?docu=' + numero)
+                    .done(function (res) {
+                        if (res) {
+                            $('#Telefono').val(res.telefono || '');
+                            $('#Email').val(res.correo || '');
+                        } else {
+                            // Cliente no encontrado, limpiar campos
+                            $('#Telefono').val('');
+                            $('#Email').val('');
+                        }
+                    })
+                    .fail(function () {
+                        console.error("Error al consultar teléfono y correo.");
+                        $('#Telefono').val('');
+                        $('#Email').val('');
+                    });
+            })
+            .fail(function () {
+                alert("No se pudo obtener información del documento.");
+                $('#NombreCliente').val('');
+                $('#Telefono').val('');
+                $('#Email').val('');
+            });
+    });
+</script>
+
+
+
