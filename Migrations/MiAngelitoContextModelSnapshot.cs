@@ -465,6 +465,59 @@ namespace webBotica2.Migrations
                     b.ToTable("Marca", (string)null);
                 });
 
+            modelBuilder.Entity("webBotica2.Models.ParametrosGenerales", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DiasVencimientoMinima")
+                        .HasColumnType("integer")
+                        .HasColumnName("dias_vencimiento_minima");
+
+                    b.Property<decimal>("GananciaMinimaAnual")
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("ganancia_minima_anual");
+
+                    b.Property<decimal>("GananciaMinimaMensual")
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("ganancia_minima_mensual");
+
+                    b.Property<decimal>("Igv")
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("igv");
+
+                    b.Property<byte[]>("LogoSistema")
+                        .HasColumnType("bytea")
+                        .HasColumnName("logo_sistema");
+
+                    b.Property<string>("NombreEmporesa")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("nombre_empresa");
+
+                    b.Property<bool>("modoOscuro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("modo_oscuro");
+
+                    b.Property<string>("ruc")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(11)")
+                        .HasColumnName("ruc");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParametrosGenerales");
+                });
+
             modelBuilder.Entity("webBotica2.Models.Producto", b =>
                 {
                     b.Property<int>("IdProd")
@@ -491,6 +544,10 @@ namespace webBotica2.Migrations
                     b.Property<int?>("IdCategoria")
                         .HasColumnType("integer")
                         .HasColumnName("id_categoria");
+
+                    b.Property<int?>("IdLaboratorio")
+                        .HasColumnType("integer")
+                        .HasColumnName("id_laboratorio");
 
                     b.Property<int?>("IdMarca")
                         .HasColumnType("integer")
@@ -534,10 +591,16 @@ namespace webBotica2.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("stock");
 
+                    b.Property<int>("StockMinimo")
+                        .HasColumnType("integer")
+                        .HasColumnName("stockMinimo");
+
                     b.HasKey("IdProd")
                         .HasName("PK__Producto__0DA348730FC5C438");
 
                     b.HasIndex("IdCategoria");
+
+                    b.HasIndex("IdLaboratorio");
 
                     b.HasIndex("IdMarca");
 
@@ -568,10 +631,6 @@ namespace webBotica2.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("estado");
 
-                    b.Property<int?>("IdLaboratorio")
-                        .HasColumnType("integer")
-                        .HasColumnName("id_laboratorio");
-
                     b.Property<string>("RazonSocial")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -588,26 +647,16 @@ namespace webBotica2.Migrations
                         .IsFixedLength();
 
                     b.Property<string>("Telefono")
-                        .IsRequired()
                         .HasMaxLength(9)
                         .IsUnicode(false)
                         .HasColumnType("character(9)")
                         .HasColumnName("telefono")
                         .IsFixedLength();
 
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("tipo");
-
                     b.HasKey("IdProveedor")
-                        .HasName("PK__Proveedo__8D3DFE2852FB3F61");
+                        .HasName("PK_Proveedor");
 
-                    b.HasIndex("IdLaboratorio");
-
-                    b.HasIndex(new[] { "Ruc" }, "UQ__Proveedo__C2B74E61BA16DC0C")
+                    b.HasIndex(new[] { "Ruc" }, "UQ_Proveedor_RUC")
                         .IsUnique();
 
                     b.ToTable("Proveedores");
@@ -838,6 +887,11 @@ namespace webBotica2.Migrations
                         .HasForeignKey("IdCategoria")
                         .HasConstraintName("FK__Producto__id_cat__47DBAE45");
 
+                    b.HasOne("webBotica2.Models.Laboratorio", "IdLaboratorioNavigation")
+                        .WithMany("Productos")
+                        .HasForeignKey("IdLaboratorio")
+                        .HasConstraintName("FK__Producto__id_lab__produc");
+
                     b.HasOne("webBotica2.Models.Marca", "IdMarcaNavigation")
                         .WithMany("Productos")
                         .HasForeignKey("IdMarca")
@@ -850,19 +904,11 @@ namespace webBotica2.Migrations
 
                     b.Navigation("IdCategoriaNavigation");
 
+                    b.Navigation("IdLaboratorioNavigation");
+
                     b.Navigation("IdMarcaNavigation");
 
                     b.Navigation("IdProveedorNavigation");
-                });
-
-            modelBuilder.Entity("webBotica2.Models.Proveedore", b =>
-                {
-                    b.HasOne("webBotica2.Models.Laboratorio", "IdLaboratorioNavigation")
-                        .WithMany("Proveedores")
-                        .HasForeignKey("IdLaboratorio")
-                        .HasConstraintName("FK__Proveedor__id_la__4316F928");
-
-                    b.Navigation("IdLaboratorioNavigation");
                 });
 
             modelBuilder.Entity("webBotica2.Models.Usuario", b =>
@@ -902,7 +948,7 @@ namespace webBotica2.Migrations
 
             modelBuilder.Entity("webBotica2.Models.Laboratorio", b =>
                 {
-                    b.Navigation("Proveedores");
+                    b.Navigation("Productos");
                 });
 
             modelBuilder.Entity("webBotica2.Models.Marca", b =>

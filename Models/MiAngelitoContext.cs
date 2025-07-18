@@ -45,6 +45,8 @@ public partial class MiAngelitoContext : DbContext
 
     public virtual DbSet<Venta> Ventas { get; set; }
 
+    public virtual DbSet<ParametrosGenerales> ParametrosGenerales { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Categorium>(entity =>
@@ -344,6 +346,8 @@ public partial class MiAngelitoContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("sku");
             entity.Property(e => e.Stock).HasColumnName("stock");
+            entity.Property(e => e.StockMinimo).HasColumnName("stockMinimo");
+            entity.Property(e => e.IdLaboratorio).HasColumnName("id_laboratorio");
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Productos)
                 .HasForeignKey(d => d.IdCategoria)
@@ -356,46 +360,49 @@ public partial class MiAngelitoContext : DbContext
             entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.Productos)
                 .HasForeignKey(d => d.IdProveedor)
                 .HasConstraintName("FK__Producto__id_pro__46E78A0C");
+            entity.HasOne(d => d.IdLaboratorioNavigation).WithMany(p => p.Productos)
+                .HasForeignKey(d => d.IdLaboratorio)
+                .HasConstraintName("FK__Producto__id_lab__produc");
         });
 
         modelBuilder.Entity<Proveedore>(entity =>
         {
-            entity.HasKey(e => e.IdProveedor).HasName("PK__Proveedo__8D3DFE2852FB3F61");
+            entity.HasKey(e => e.IdProveedor)
+                .HasName("PK_Proveedor");
 
-            entity.HasIndex(e => e.Ruc, "UQ__Proveedo__C2B74E61BA16DC0C").IsUnique();
+            entity.HasIndex(e => e.Ruc, "UQ_Proveedor_RUC")
+                .IsUnique();
 
-            entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
-            entity.Property(e => e.Correo)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("correo");
-            entity.Property(e => e.Estado)
-                .HasDefaultValue(true)
-                .HasColumnName("estado");
-            entity.Property(e => e.IdLaboratorio).HasColumnName("id_laboratorio");
-            entity.Property(e => e.RazonSocial)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("razon_social");
+            entity.Property(e => e.IdProveedor)
+                .HasColumnName("id_proveedor");
+
             entity.Property(e => e.Ruc)
                 .HasMaxLength(11)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("ruc");
+
+            entity.Property(e => e.RazonSocial)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("razon_social");
+
             entity.Property(e => e.Telefono)
                 .HasMaxLength(9)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("telefono");
-            entity.Property(e => e.Tipo)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("tipo");
 
-            entity.HasOne(d => d.IdLaboratorioNavigation).WithMany(p => p.Proveedores)
-                .HasForeignKey(d => d.IdLaboratorio)
-                .HasConstraintName("FK__Proveedor__id_la__4316F928");
+            entity.Property(e => e.Correo)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("correo");
+
+            entity.Property(e => e.Estado)
+                .HasDefaultValue(true)
+                .HasColumnName("estado");
         });
+
 
         modelBuilder.Entity<Rol>(entity =>
         {
@@ -470,6 +477,47 @@ public partial class MiAngelitoContext : DbContext
                 .HasForeignKey(d => d.IdCliente)
                 .HasConstraintName("FK__Ventas__id_clien__59063A47");
         });
+        modelBuilder.Entity<ParametrosGenerales>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.ruc)
+                .IsRequired()
+                .HasMaxLength(11)
+                .IsUnicode(false)
+                .HasColumnName("ruc");
+
+            entity.Property(e => e.NombreEmporesa)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("nombre_empresa");
+
+            entity.Property(e => e.Igv)
+                .HasColumnType("numeric(5,2)")
+                .HasColumnName("igv");
+
+            entity.Property(e => e.GananciaMinimaMensual)
+                .HasColumnType("numeric(10,2)")
+                .HasColumnName("ganancia_minima_mensual");
+
+            entity.Property(e => e.GananciaMinimaAnual)
+                .HasColumnType("numeric(10,2)")
+                .HasColumnName("ganancia_minima_anual");
+
+            entity.Property(e => e.DiasVencimientoMinima)
+                .HasColumnName("dias_vencimiento_minima");
+
+            entity.Property(e => e.LogoSistema)
+                .HasColumnType("bytea")
+                .HasColumnName("logo_sistema");
+
+            entity.Property(e => e.modoOscuro)
+                .HasDefaultValue(false)
+                .HasColumnName("modo_oscuro");
+        });
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }

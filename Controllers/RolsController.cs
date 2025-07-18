@@ -139,10 +139,11 @@ namespace webBotica2.Controllers
             var rol = await _context.Rols.FindAsync(id);
             if (rol != null)
             {
-                rol.Estado = false;
+                rol.Estado = !rol.Estado;
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 

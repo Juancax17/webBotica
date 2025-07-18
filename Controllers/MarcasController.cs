@@ -139,10 +139,11 @@ namespace webBotica2.Controllers
             var marca = await _context.Marcas.FindAsync(id);
             if (marca != null)
             {
-                marca.Estado= false;
+                marca.Estado = !marca.Estado;
+
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

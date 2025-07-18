@@ -258,3 +258,4 @@ C:\Users\HP\OneDrive\Desktop\ProyectoWeb-C#\webBotica-copia\webBotica\obj\Debug\
 C:\Users\HP\OneDrive\Desktop\ProyectoWeb-C#\webBotica-copia\webBotica\obj\Debug\net8.0\webBotica2.sourcelink.json
 C:\Users\HP\OneDrive\Desktop\ProyectoWeb-C#\webBotica-copia\webBotica\bin\Debug\net8.0\Npgsql.dll
 C:\Users\HP\OneDrive\Desktop\ProyectoWeb-C#\webBotica-copia\webBotica\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\HP\OneDrive\Desktop\ProyectoWeb-C#\webBotica-copia\webBotica\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

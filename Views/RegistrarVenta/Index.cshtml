@@ -1,6 +1,8 @@
 ﻿
 
-@model webBotica2.Models.RegistrarVenta
+@model webBotica2.Models.RegistrarVenta;
+
+
 @using System.Text.Json
 
 @{
@@ -114,7 +116,13 @@
                         <input id="Email" name="Email" class="form-control" style="border-radius: 8px;" maxlength="50" />
                     </div>
 
+                    <p><strong>Subtotal:</strong> S/ <span id="subtotalVenta">0.00</span></p>
+                    <p><strong>IGV:</strong> S/ <span id="igvVenta">0.00</span></p>
                     <p><strong>Total:</strong> S/ <span id="totalVenta">0.00</span></p>
+
+                    <input type="hidden" id="igvValorOculto" value="@((ViewBag.igv ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+
+
                 </div>
             </div>
         </div>
@@ -151,6 +159,9 @@
 
 <!-- SCRIPTS -->
 <script>
+    const IGV = parseFloat(document.getElementById("igvValorOculto").value);
+    console.log("IGV JS:", IGV);
+
     let productos = @Html.Raw(productosJson);
     let index = 0;
 
@@ -166,7 +177,7 @@
                     <td>
                         <input type="number" class="form-control" value="${p.Precio}" disabled />
                     </td>
-                    <td>${p.Stock} </td>
+                    <td>${p.Stock}</td>
                     <td>
                         <button class="btn btn-sm btn-primary"
                                 data-id="${p.Id}"
@@ -263,13 +274,30 @@
         }
     });
 
-    function actualizarTotal() {
-        let total = 0;
+        function actualizarTotal() {
+        let subtotal = 0;
         document.querySelectorAll(".subtotal").forEach(input => {
-            total += parseFloat(input.value) || 0;
+            subtotal += parseFloat(input.value) || 0;
         });
+
+
+
+        const tipoDocumento = document.getElementById("TipoDocumento").value;
+        console.log("Tipo de documento:", tipoDocumento);
+    console.log("Valor de IGV:", IGV);
+        let igvMonto = 0;
+
+        if (tipoDocumento === "RUC") {
+            igvMonto = subtotal * IGV;
+        }
+
+        const total = subtotal + igvMonto;
+
+        document.getElementById("subtotalVenta").innerText = subtotal.toFixed(2);
+        document.getElementById("igvVenta").innerText = igvMonto.toFixed(2);
         document.getElementById("totalVenta").innerText = total.toFixed(2);
     }
+
 </script>
 
 
@@ -291,6 +319,8 @@
 
             numeroDoc.value = ""; // opcional: limpiar
             numeroDoc.setAttribute("maxlength", maxPorTipo[selected] || 20);
+
+            actualizarTotal();
         });
     });
 </script>

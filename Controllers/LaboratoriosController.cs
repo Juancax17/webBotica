@@ -22,11 +22,9 @@ namespace webBoticaAdmin.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var laboratoriosActivos = await _context.Laboratorios
-                .Where(l => l.Estado)
-                .ToListAsync();
+           
 
-            return View(laboratoriosActivos);
+            return View(await _context.Laboratorios.ToListAsync());
         }
 
         // GET: Laboratorios/Create
@@ -113,23 +111,6 @@ namespace webBoticaAdmin.Controllers
             return View(laboratorio);
         }
 
-        // GET: Laboratorios/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var laboratorio = await _context.Laboratorios
-                .FirstOrDefaultAsync(m => m.IdLaboratorio == id);
-            if (laboratorio == null)
-            {
-                return NotFound();
-            }
-
-            return View(laboratorio);
-        }
 
         // POST: Laboratorios/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -139,10 +120,11 @@ namespace webBoticaAdmin.Controllers
             var laboratorio = await _context.Laboratorios.FindAsync(id);
             if (laboratorio != null)
             {
-                laboratorio.Estado = false;
+                laboratorio.Estado = !laboratorio.Estado;
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 

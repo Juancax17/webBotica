@@ -41,9 +41,19 @@ namespace webBotica.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
+
+                if (ExistCli)
+                {
+                    ModelState.AddModelError("Documento", "El Documento ya se encuentra registrado");
+                    return View(cliente); // <-- Interrumpe aquí
+                }
+
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
             }
             return View(cliente);
         }
@@ -80,8 +90,18 @@ namespace webBotica.Controllers
             {
                 try
                 {
-                    _context.Update(cliente);
+                    bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
+
+                    if (ExistCli)
+                    {
+                        ModelState.AddModelError("Documento", "El Documento ya se encuentra registrado");
+                        return View(cliente); // <-- Interrumpe aquí
+                    }
+
+                    _context.Add(cliente);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -99,23 +119,6 @@ namespace webBotica.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
 
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -125,10 +128,11 @@ namespace webBotica.Controllers
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
-                _context.Clientes.Remove(cliente);
+                cliente.Estado = !cliente.Estado;
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+           
             return RedirectToAction(nameof(Index));
         }
 

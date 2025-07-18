@@ -112,6 +112,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9uaXRvclZlbnRhc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/ParametrosGenerales/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFyYW1ldHJvc0dlbmVyYWxlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/Productoes/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9lc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -138,6 +142,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/RegistrarVenta/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0cmFyVmVudGFcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/Reportes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0ZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/Rols/Create.cshtml]
@@ -186,6 +194,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/Ventas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/View.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlldy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/HP/OneDrive/Desktop/ProyectoWeb-C\#/webBotica-copia/webBotica/Views/_ViewImports.cshtml]

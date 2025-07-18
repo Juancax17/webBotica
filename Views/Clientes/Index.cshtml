@@ -43,9 +43,15 @@
                     <td>@(item.EsRegistrado ? "Sí" : "No")</td>
                     <td class="text-center">
                         <div class="btn-group" role="group">
-                            <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-primary btn-sm">✏️ Editar</a>
-                            <form asp-action="Delete" asp-route-id="@item.IdCliente" method="post" onsubmit="return confirm('¿Está seguro de deshabilitar este cliente?');" class="d-inline">
-                                <button type="submit" class="btn btn-danger btn-sm">🗑️ Deshabilitar</button>
+                            <a class="btn btn-sm btn-primary me-1" asp-action="Edit" asp-route-id="@item.IdCliente">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <form class="d-inline" asp-action="Delete" asp-route-id="@item.IdCliente" method="post"
+                                  onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este laboratorio?');">
+                                <button type="submit" class="btn btn-sm @(item.Estado ? "btn-danger" : "btn-success")">
+                                    <i class="bi @(item.Estado ? "bi-x-circle" : "bi-check-circle")"></i>
+                                    @(item.Estado ? "Deshabilitar" : "Habilitar")
+                                </button>
                             </form>
                         </div>
                     </td>

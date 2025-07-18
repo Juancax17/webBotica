@@ -1,0 +1,110 @@
+﻿
+
+@model webBotica2.Models.ParametrosGenerales
+
+@{
+    ViewData["Title"] = "Parámetros Generales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow rounded-4 p-4 mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h4 class="card-title text-primary mb-4">
+                <i class="fa-solid fa-sliders me-2"></i> Parámetros Generales del Sistema
+            </h4>
+
+            <form asp-action="Index" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                @* Campo RUC *@
+                <div class="mb-3">
+                    <label asp-for="ruc" class="form-label">RUC</label>
+                    <div class="input-group">
+                        <input asp-for="ruc" class="form-control rounded-start-3" placeholder="Ej. 20123456789" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="ruc" class="text-danger small"></span>
+                </div>
+
+                @* Campo Nombre de Empresa *@
+                <div class="mb-3">
+                    <label asp-for="NombreEmporesa" class="form-label">Nombre de la Empresa</label>
+                    <div class="input-group">
+                        <input asp-for="NombreEmporesa" class="form-control rounded-start-3" placeholder="Ej. Botica San Juan" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="NombreEmporesa" class="text-danger small"></span>
+                </div>
+
+                @* IGV *@
+                <div class="mb-3">
+                    <label asp-for="Igv" class="form-label">IGV (%)</label>
+                    <div class="input-group">
+                        <input asp-for="Igv" class="form-control rounded-start-3" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="Igv" class="text-danger small"></span>
+                </div>
+
+                @* Ganancia Mensual *@
+                <div class="mb-3">
+                    <label asp-for="GananciaMinimaMensual" class="form-label">Meta Mensual</label>
+                    <div class="input-group">
+                        <input asp-for="GananciaMinimaMensual" class="form-control rounded-start-3" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="GananciaMinimaMensual" class="text-danger small"></span>
+                </div>
+
+                @* Ganancia Anual *@
+                <div class="mb-3">
+                    <label asp-for="GananciaMinimaAnual" class="form-label">Meta Anual</label>
+                    <div class="input-group">
+                        <input asp-for="GananciaMinimaAnual" class="form-control rounded-start-3" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="GananciaMinimaAnual" class="text-danger small"></span>
+                </div>
+
+                @* Días de Vencimiento *@
+                <div class="mb-3">
+                    <label asp-for="DiasVencimientoMinima" class="form-label">Días Mínimos de Vencimiento</label>
+                    <div class="input-group">
+                        <input asp-for="DiasVencimientoMinima" class="form-control rounded-start-3" readonly />
+                        <button type="button" class="btn btn-outline-secondary" onclick="habilitar(this)">Editar</button>
+                    </div>
+                    <span asp-validation-for="DiasVencimientoMinima" class="text-danger small"></span>
+                </div>
+
+                @* Logo del Sistema *@
+                <div class="mb-3">
+                    <label class="form-label">Logo del Sistema</label>
+                    <input type="file" name="LogoSistema" class="form-control rounded-3" />
+                </div>
+
+                @* Modo oscuro *@
+                <div class="form-check form-switch mb-4">
+                    <input asp-for="modoOscuro" class="form-check-input" type="checkbox" role="switch" id="modoOscuroSwitch">
+                    <label asp-for="modoOscuro" class="form-check-label" for="modoOscuroSwitch">Activar modo oscuro</label>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary rounded-3">
+                        <i class="fa-solid fa-save me-2"></i> Guardar parámetros
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function habilitar(btn) {
+            const input = btn.closest('.input-group').querySelector('input');
+            input.removeAttribute('readonly');
+            input.focus();
+        }
+    </script>
+}

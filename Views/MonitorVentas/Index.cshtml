@@ -11,16 +11,23 @@
 
     <form method="get" asp-action="BuscarVenta" class="mb-3">
         <div class="row justify-content-xl-center">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <input type="text" name="filtro" class="form-control" placeholder="Buscar por DNI, RUC o ID de venta..." value="@ViewBag.Filtro" />
             </div>
+
+            <div class="col-md-2">
+                <input type="date" name="fechaInicio" class="form-control" value="@ViewBag.FechaInicio" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="date" name="fechaFin" class="form-control" value="@ViewBag.FechaFin" />
+            </div>
+
             <div class="col-auto">
                 <button type="submit" class="btn btn-primary">🔍 Buscar</button>
             </div>
             <div class="col-auto">
-                <a asp-action="Index" class="btn btn-outline-secondary" title="Refrescar ventas">
-                    🔄
-                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Refrescar ventas">🔄</a>
             </div>
         </div>
     </form>
@@ -45,18 +52,18 @@
                         <td><strong>@venta.Total.ToString("C")</strong></td>
                         <td>
                             <span class="badge @(venta.EstadoVenta == "Pagado" ? "bg-success" :
-                                            venta.EstadoVenta == "Pendiente" ? "bg-warning text-dark" :
-                                            venta.EstadoVenta == "Cancelado" ? "bg-danger" : "bg-secondary")">
+                                                                                                                venta.EstadoVenta == "Pendiente" ? "bg-warning text-dark" :
+                                                                                                                venta.EstadoVenta == "Cancelado" ? "bg-danger" : "bg-secondary")">
                             @venta.EstadoVenta
                         </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-@venta.IdVenta">
-                                Ver Detalle
-                            </button>
-                        </td>
-                    </tr>
-                }
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-@venta.IdVenta">
+                            Ver Detalle
+                        </button>
+                    </td>
+                </tr>
+                                }
             </tbody>
         </table>
     </div>
@@ -113,4 +120,3 @@
         </div>
     }
 </div>
-

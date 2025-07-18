@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "Reportes de Productos";
+    var bajoStock = ViewBag.BajoStock as List<Producto>;
+    var vencidos = ViewBag.Vencidos as List<Producto>;
+    var porVencer = ViewBag.PorVencer as List<Producto>;
+}
+
+<style>
+    .card-custom {
+        border: 2px solid #dee2e6;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card-custom:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+    .card-header-custom {
+        font-weight: 600;
+        font-size: 1.1rem;
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #ddd;
+        padding: 14px 18px;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+    }
+
+    .table-sm th, .table-sm td {
+        vertical-align: middle;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .report-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+</style>
+
+
+<div class="container py-4">
+    <div class="report-grid">
+
+        <!-- Bajo Stock -->
+        <div class="card card-custom h-100">
+            <div class="card-header-custom">
+                📉 Productos con Bajo Stock (@bajoStock.Count)
+            </div>
+            <div class="card-body overflow-auto">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Stock</th>
+                            <th>Stock Mínimo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in bajoStock)
+                        {
+                            <tr>
+                                <td>@p.Sku</td>
+                                <td>@p.Nombre</td>
+                                <td>@p.Stock</td>
+                                <td>@p.StockMinimo</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Por Vencer -->
+        <div class="card card-custom h-100">
+            <div class="card-header-custom">
+                ⏳ Productos por Vencer (@porVencer.Count)
+            </div>
+            <div class="card-body overflow-auto">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Fecha Venc.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in porVencer)
+                        {
+                            <tr>
+                                <td>@p.Sku</td>
+                                <td>@p.Nombre</td>
+                                <td>@p.FechaVen</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vencidos ocupa toda la fila -->
+        <div class="card card-custom" style="grid-column: 1 / -1;">
+            <div class="card-header-custom">
+                ❌ Productos Vencidos (@vencidos.Count)
+            </div>
+            <div class="card-body overflow-auto">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Fecha Venc.</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in vencidos)
+                        {
+                            <tr>
+                                <td>@p.Sku</td>
+                                <td>@p.Nombre</td>
+                                <td>@p.FechaVen</td>
+                                <td>@p.Stock</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Top 10 más vendidos -->
+        <div class="card card-custom" style="grid-column: 1 / -1;">
+            <div class="card-header-custom">
+                🏆 Top 10 Productos Más Vendidos
+            </div>
+            <div class="card-body overflow-auto">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Total Vendido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.TopVendidos)
+                        {
+                            <tr>
+                                <td>@item.Nombre</td>
+                                <td>@item.TotalVendidos</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+

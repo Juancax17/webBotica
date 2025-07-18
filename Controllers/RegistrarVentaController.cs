@@ -48,6 +48,10 @@ namespace webBotica2.Controllers
                     Stock = p.Stock
                 }).ToListAsync();
 
+            var igv = await _context.ParametrosGenerales.Where(p => p.Id == 2).FirstOrDefaultAsync();
+      
+            ViewBag.igv = (igv?.Igv ?? 0);
+
             return View(model);
         }
 
@@ -216,15 +220,21 @@ namespace webBotica2.Controllers
                 _context.Clientes.Add(nuevoCliente);
                 await _context.SaveChangesAsync();
 
-            } 
+            }
+
+            var igv = await _context.ParametrosGenerales.Where(p => p.Id == 2).FirstOrDefaultAsync();
+            ViewBag.IgvDebug = igv?.Igv ?? 0;
+
+            ViewBag.igv = (igv?.Igv ?? 0);
 
 
-            // 🧾 Crear nueva venta
+
+            //  Crear nueva venta
             var venta = new Venta
             {
                 IdCliente = cliente.IdCliente,
                 Fecha = DateOnly.FromDateTime(DateTime.Now),
-                EstadoVenta = "Pendiente", // o el valor que manejes
+                EstadoVenta = "Pendiente",      
                 Total = model.Detalles.Sum(d => d.Subtotal)
             };
 
@@ -260,7 +270,7 @@ namespace webBotica2.Controllers
                 return View(model);
             }
 
-            // 🧾 Añadir los detalles de la venta
+            //  Añadir los detalles de la venta
             foreach (var item in model.Detalles)
             {
                 venta.DetalleVenta.Add(new DetalleVentum
@@ -271,7 +281,7 @@ namespace webBotica2.Controllers
                     Subtotal = item.Subtotal
                 });
 
-                // (opcional) Actualizar stock
+      
                 var prod = await _context.Productos.FindAsync(item.IdProd);
 
                

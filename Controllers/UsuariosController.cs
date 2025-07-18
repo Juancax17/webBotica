@@ -164,10 +164,12 @@ namespace webBotica2.Controllers
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario != null)
             {
-                usuario.Estado = false;
+                usuario.Estado = !usuario.Estado;
+
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+     
             return RedirectToAction(nameof(Index));
         }
 

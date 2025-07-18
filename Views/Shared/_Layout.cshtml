@@ -36,6 +36,9 @@
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
+            <div class="sidebar-heading">
+                Vista
+            </div>
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a class="nav-link" href="@Url.Action("Index","DashBoard")">
@@ -56,7 +59,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-folder"></i>
                     <span>Administración</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -94,7 +97,7 @@
                 </a>
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVentas"
                    aria-expanded="true" aria-controls="collapseVentas">
-                    <i class="fas fa-shopping-bag" "></i>
+                    <i class="fas fa-shopping-cart" "></i>
                     <span>Ventas</span>
                 </a>
                 <div id="collapseVentas" class="collapse" aria-labelledby="headingVentas"
@@ -104,18 +107,31 @@
                         <a class="collapse-item" href="@Url.Action("Index", "MonitorVentas")">Monitor de ventas</a>
                     </div>
                 </div>
+               
             </li>
 
-
-
-            <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="@Url.Action("Index", "Reportes")">
                     <i class="fas fa-chart-pie"></i>
                     <span>Reportes</span>
                 </a>
             </li>
 
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Configuraciónes
+            </div>
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Index", "ParametrosGenerales")">
+                    <i class="fa fa-cog"></i>
+                    <span>Parametros del sistema</span>
+                </a>
+            </li>
+
+         
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -316,7 +332,7 @@
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Context.Session.GetString("Nombre")</span>
                                 <img class="img-profile rounded-circle"
-                                     src="~/img/jorgito.png">
+                                     src="~/img/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -357,7 +373,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; Economia y Salud </span>
                     </div>
                 </div>
             </footer>

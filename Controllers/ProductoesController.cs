@@ -21,13 +21,19 @@ namespace webBotica2.Controllers
         // GET: Productoes
         public async Task<IActionResult> Index()
         {
-            
-            var miAngelitoContext = _context.Productos.Include(p => p.IdCategoriaNavigation).Include(p => p.IdMarcaNavigation).Include(p => p.IdProveedorNavigation);
+            var productos = await _context.Productos
+        .Include(p => p.IdCategoriaNavigation)
+        .Include(p => p.IdMarcaNavigation)
+        .Include(p => p.IdProveedorNavigation)
+        .Include(p => p.IdLaboratorioNavigation)
+        .ToListAsync();
 
-            return View(await miAngelitoContext.ToListAsync());
+            return View(productos);
+
+
         }
 
-       
+
 
         // GET: Productoes/Create
         public IActionResult Create()
@@ -35,6 +41,8 @@ namespace webBotica2.Controllers
             ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p=>p.Estado==true), "IdCategoria", "Nombre");
             ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre");
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial");
+            ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre");
+            
             return View();
         }
 
@@ -43,19 +51,37 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProd,Sku,Nombre,Presentacion,PrecioCompra,PrecioVenta,FechaVen,Stock,IdProveedor,IdCategoria,IdMarca,Foto,Estado")] Producto producto)
+        public async Task<IActionResult> Create([Bind("IdProd,Sku,Nombre,Presentacion,PrecioCompra,PrecioVenta,FechaVen,Stock,StockMinimo,IdProveedor,IdLaboratorio,IdCategoria,IdMarca,Foto,Estado")] Producto producto)
         {
             if (ModelState.IsValid)
             {
-                var ExistProd = _context.Productos.Any(p => p.Sku.ToString() == producto.Sku.ToString());
+                var ExistProd = _context.Productos.Any(p => p.Sku == producto.Sku);
+
                 if (ExistProd)
                 {
                     ModelState.AddModelError("Sku", "El producto ya existe");
                     ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
                     ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
                     ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+                    ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
                     return View(producto);
                 }
+
+                var validarFecha = await _context.ParametrosGenerales.FirstOrDefaultAsync();
+
+                var numeroF = producto.FechaVen.ToDateTime(TimeOnly.MinValue) - DateTime.Now;
+
+                if (numeroF.TotalDays < validarFecha.DiasVencimientoMinima)
+                {
+                    ModelState.AddModelError("FechaVen", "La Fecha de vencimiento es muy pronta, por favor actualizar");
+                    ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
+                    ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
+                    ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+                    ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
+                    return View(producto);
+                }
+
+
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -63,6 +89,7 @@ namespace webBotica2.Controllers
             ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
             ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+            ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
             return View(producto);
         }
 
@@ -82,6 +109,7 @@ namespace webBotica2.Controllers
             ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
             ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+            ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
             return View(producto);
         }
 
@@ -90,7 +118,7 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProd,Sku,Nombre,Presentacion,PrecioCompra,PrecioVenta,FechaVen,Stock,IdProveedor,IdCategoria,IdMarca,Foto,Estado")] Producto producto)
+        public async Task<IActionResult> Edit(int id, [Bind("IdProd,Sku,Nombre,Presentacion,PrecioCompra,PrecioVenta,FechaVen,Stock,StockMinimo,IdProveedor,IdLaboratorio,IdCategoria,IdMarca,Foto,Estado")] Producto producto)
         {
             if (id != producto.IdProd)
             {
@@ -108,8 +136,24 @@ namespace webBotica2.Controllers
                         ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
                         ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
                         ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+                        ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
                         return View(producto);
                     }
+
+                    var validarFecha = await _context.ParametrosGenerales.FirstOrDefaultAsync();
+
+                    var numeroF = producto.FechaVen.ToDateTime(TimeOnly.MinValue) - DateTime.Now;
+
+                    if (numeroF.TotalDays < validarFecha.DiasVencimientoMinima)
+                    {
+                        ModelState.AddModelError("FechaVen", "La Fecha de vencimiento es muy pronta, por favor actualizar");
+                        ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
+                        ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
+                        ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+                        ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
+                        return View(producto);
+                    }
+
                     _context.Update(producto);
                     await _context.SaveChangesAsync();
                 }
@@ -126,32 +170,13 @@ namespace webBotica2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "IdCategoria", producto.IdCategoria);
-            ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "IdMarca", producto.IdMarca);
-            ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "IdProveedor", producto.IdProveedor);
+            ViewData["IdCategoria"] = new SelectList(_context.Categoria.Where(p => p.Estado == true), "IdCategoria", "Nombre", producto.IdCategoria);
+            ViewData["IdMarca"] = new SelectList(_context.Marcas.Where(p => p.Estado == true), "IdMarca", "Nombre", producto.IdMarca);
+            ViewData["IdProveedor"] = new SelectList(_context.Proveedores.Where(p => p.Estado == true), "IdProveedor", "RazonSocial", producto.IdProveedor);
+            ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(p => p.Estado == true), "IdLaboratorio", "Nombre", producto.IdLaboratorio);
             return View(producto);
         }
 
-        // GET: Productoes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var producto = await _context.Productos
-                .Include(p => p.IdCategoriaNavigation)
-                .Include(p => p.IdMarcaNavigation)
-                .Include(p => p.IdProveedorNavigation)
-                .FirstOrDefaultAsync(m => m.IdProd == id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            return View(producto);
-        }
 
         // POST: Productoes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -161,10 +186,11 @@ namespace webBotica2.Controllers
             var producto = await _context.Productos.FindAsync(id);
             if (producto != null)
             {
-                producto.Estado= false;
+                producto.Estado = !producto.Estado;
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+          
             return RedirectToAction(nameof(Index));
         }
 

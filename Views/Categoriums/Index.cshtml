@@ -15,7 +15,7 @@
     <thead class="table-dark">
         <tr>
             <th>Nombre</th>
-            <th>Estado</th>
+            <th>Activo</th>
             <th class="text-center">Acciones</th>
         </tr>
     </thead>
@@ -24,12 +24,15 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-                <td>@(item.Estado ? "Habilitado" : "Deshabilitado")</td>
+                <td>@(item.Estado ? "✅" : "❌")</td>
                 <td class="text-center">
                     <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-primary btn-sm">Editar</a>
-                    <form asp-action="Delete" asp-route-id="@item.IdCategoria" method="post" class="d-inline"
-                          onsubmit="return confirm('¿Está seguro de deshabilitar esta categoría?');">
-                        <button type="submit" class="btn btn-danger btn-sm">Deshabilitar</button>
+                    <form class="d-inline" asp-action="Delete" asp-route-id="@item.IdCategoria" method="post"
+                          onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este laboratorio?');">
+                        <button type="submit" class="btn btn-sm @(item.Estado ? "btn-danger" : "btn-success")">
+                            <i class="bi @(item.Estado ? "bi-x-circle" : "bi-check-circle")"></i>
+                            @(item.Estado ? "Deshabilitar" : "Habilitar")
+                        </button>
                     </form>
                 </td>
             </tr>

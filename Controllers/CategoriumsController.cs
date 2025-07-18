@@ -141,10 +141,11 @@ public class CategoriumsController : Controller
         var categorium = await _context.Categoria.FindAsync(id);
         if (categorium != null)
         {
-            categorium.Estado = false;
+            categorium.Estado = !categorium.Estado;
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
+        
         return RedirectToAction(nameof(Index));
     }
 
