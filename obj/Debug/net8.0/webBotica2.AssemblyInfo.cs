@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("webBotica2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ce86742a330c226ce39e3fdf39b8240f44bad77")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d5fe1dbd877d3397bd573b0f06efd950686f4fc")]
 [assembly: System.Reflection.AssemblyProductAttribute("webBotica2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("webBotica2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

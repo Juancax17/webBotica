@@ -17,19 +17,30 @@ namespace webBotica2.Controllers
         {
             _context = context;
         }
-
+        
         // GET: Proveedores
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            
-            return View(await _context.Proveedores.ToListAsync());
+            var proveedores = from p in _context.Proveedores
+                              select p;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                proveedores = proveedores.Where(p =>
+                    p.RazonSocial.Contains(searchString) ||
+                    p.Ruc.Contains(searchString)
+                );
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            return View(await proveedores.ToListAsync());
         }
 
-        
+
         // GET: Proveedores/Create
         public IActionResult Create()
         {
-            ViewData["IdLaboratorio"] = new SelectList(_context.Laboratorios.Where(l=>l.Estado==true), "IdLaboratorio", "Nombre");
             return View();
         }
 
@@ -38,23 +49,26 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProveedor,Ruc,RazonSocial,Tipo,Telefono,Correo,Estado,IdLaboratorio")] Proveedore proveedore)
+        public async Task<IActionResult> Create([Bind("Ruc,RazonSocial,Tipo,Telefono,Correo,Estado")] Proveedore proveedore)
         {
             if (ModelState.IsValid)
             {
-                bool ExistProv= _context.Proveedores.Any(r=>r.Ruc == proveedore.Ruc);
+                bool ExistProv = _context.Proveedores.Any(r => r.Ruc == proveedore.Ruc);
 
-                if (ExistProv) {
+                if (ExistProv)
+                {
                     ModelState.AddModelError("Ruc", "El RUC ya se encuentra registrado");
-                    
+                    return View(proveedore);
                 }
+
                 _context.Add(proveedore);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return View(proveedore);
         }
+
 
         // GET: Proveedores/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -78,7 +92,7 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProveedor,Ruc,RazonSocial,Tipo,Telefono,Correo,Estado")] Proveedore proveedore)
+        public async Task<IActionResult> Edit(int id, [Bind("Ruc,RazonSocial,Tipo,Telefono,Correo,Estado")] Proveedore proveedore)
         {
             if (id != proveedore.IdProveedor)
             {
@@ -87,14 +101,16 @@ namespace webBotica2.Controllers
 
             if (ModelState.IsValid)
             {
+                bool ExistProv = _context.Proveedores.Any(r => r.Ruc == proveedore.Ruc && r.IdProveedor != proveedore.IdProveedor);
+
+                if (ExistProv)
+                {
+                    ModelState.AddModelError("Ruc", "El RUC ya se encuentra registrado");
+                    return View(proveedore); // ← ¡RETORNAR AQUÍ!
+                }
+
                 try
                 {
-                    bool ExistProv = _context.Proveedores.Any(r => r.Ruc == proveedore.Ruc && r.IdProveedor != proveedore.IdProveedor);
-
-                    if (ExistProv)
-                    {
-                        ModelState.AddModelError("Ruc", "El RUC ya se encuentra registrado");
-                    }
                     _context.Update(proveedore);
                     await _context.SaveChangesAsync();
                 }
@@ -114,7 +130,7 @@ namespace webBotica2.Controllers
             return View(proveedore);
         }
 
-        
+
         // POST: Proveedores/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -129,6 +145,11 @@ namespace webBotica2.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+       
+     
+        
+
 
         private bool ProveedoreExists(int id)
         {

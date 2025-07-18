@@ -47,7 +47,7 @@
                                 <i class="bi bi-pencil-square"></i> Editar
                             </a>
                             <form class="d-inline" asp-action="Delete" asp-route-id="@item.IdCliente" method="post"
-                                  onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este laboratorio?');">
+                                  onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este Cliente?');">
                                 <button type="submit" class="btn btn-sm @(item.Estado ? "btn-danger" : "btn-success")">
                                     <i class="bi @(item.Estado ? "bi-x-circle" : "bi-check-circle")"></i>
                                     @(item.Estado ? "Deshabilitar" : "Habilitar")

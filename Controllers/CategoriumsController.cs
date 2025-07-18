@@ -43,7 +43,7 @@ public class CategoriumsController : Controller
     {
         if (ModelState.IsValid)
         {
-            var ExisteCat=_context.Categoria.Any(c => c.Nombre.ToLower()==categorium.Nombre.ToLower());
+            var ExisteCat=_context.Categoria.Any(c => c.Nombre.ToLower().Trim()==categorium.Nombre.ToLower().Trim());
 
             if (ExisteCat)
             {
@@ -89,7 +89,7 @@ public class CategoriumsController : Controller
         {
             try
             {
-                var ExisteCat = _context.Categoria.Any(c => c.Nombre.ToLower() == categorium.Nombre.ToLower() && c.IdCategoria!=categorium.IdCategoria);
+                var ExisteCat = _context.Categoria.Any(c => c.Nombre.ToLower().Trim() == categorium.Nombre.ToLower().Trim() && c.IdCategoria!=categorium.IdCategoria);
 
                 if (ExisteCat)
                 {

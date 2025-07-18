@@ -311,6 +311,7 @@ namespace webBotica2.Controllers
             {
                 return Json(new
                 {
+                    nombre = cliente.Nombre ?? "",
                     telefono = cliente.Telefono ?? "",
                     correo = cliente.Correo ?? ""
                 });

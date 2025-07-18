@@ -41,6 +41,14 @@ namespace webBotica.Controllers
         {
             if (ModelState.IsValid)
             {
+                var hoy = DateOnly.FromDateTime(DateTime.Today);
+                var fechaLimite = hoy.AddYears(-18);
+
+                if (cliente.FechaNac > fechaLimite)
+                {
+                    ModelState.AddModelError("FechaNac", "El cliente debe ser mayor de 18 años.");
+                    return View(cliente);
+                }
 
                 bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
 
@@ -90,18 +98,26 @@ namespace webBotica.Controllers
             {
                 try
                 {
-                    bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
+                    var hoy = DateOnly.FromDateTime(DateTime.Today);
+                    var fechaLimite = hoy.AddYears(-18);
+
+                    if (cliente.FechaNac > fechaLimite)
+                    {
+                        ModelState.AddModelError("FechaNac", "El cliente debe ser mayor de 18 años.");
+                        return View(cliente);
+                    }
+
+                    bool ExistCli = await _context.Clientes
+                        .AnyAsync(r => r.Documento == cliente.Documento && r.IdCliente != cliente.IdCliente);
 
                     if (ExistCli)
                     {
                         ModelState.AddModelError("Documento", "El Documento ya se encuentra registrado");
-                        return View(cliente); // <-- Interrumpe aquí
+                        return View(cliente);
                     }
 
-                    _context.Add(cliente);
+                    _context.Update(cliente);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-
                 }
                 catch (DbUpdateConcurrencyException)
                 {

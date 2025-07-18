@@ -41,7 +41,7 @@ namespace webBotica2.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool ExisteMarca = _context.Marcas.Any(m=> m.Nombre.ToLower() == marca.Nombre.ToLower());
+                bool ExisteMarca = _context.Marcas.Any(m=> m.Nombre.ToLower().Trim() == marca.Nombre.ToLower().Trim());
                 
                 if (ExisteMarca)
                 {

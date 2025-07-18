@@ -26,7 +26,7 @@ public partial class Cliente
     public string? ApellidoMaterno { get; set; }
 
     [Phone(ErrorMessage = "El Teléfono no es válido")]
-    [StringLength(15, ErrorMessage = "El Teléfono no puede tener más de 15 caracteres")]
+    [StringLength(9, ErrorMessage = "El Teléfono no puede tener más de 9 caracteres")]
     public string? Telefono { get; set; }
 
     [EmailAddress(ErrorMessage = "El Correo no es válido")]

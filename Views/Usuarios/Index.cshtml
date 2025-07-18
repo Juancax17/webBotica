@@ -41,7 +41,7 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.IdUser">Editar</a>
-                                    <form asp-action="Delete" asp-route-id="@item.IdRol" method="post" class="d-inline"
+                                    <form asp-action="Delete" asp-route-id="@item.IdUser" method="post" class="d-inline"
                                           onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este Usuario?');">
                                         <button type="submit" class="btn btn-sm @(item.Estado ? "btn-danger" : "btn-success")">
                                             <i class="bi @(item.Estado ? "bi-x-circle" : "bi-check-circle")"></i>
