@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 using System;
 using System.Configuration;
 using webBotica2.Models;
@@ -37,7 +38,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
-
+RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
 // ─────────────── Pipeline ───────────────
 if (!app.Environment.IsDevelopment())

@@ -22,7 +22,9 @@ namespace webBotica2.Controllers
         public async Task<IActionResult> Index()
         {
             var miAngelitoContext = _context.Usuarios.Include(p => p.IdRolNavigation);
-            return View(await miAngelitoContext.ToListAsync());
+            return View(await _context.Usuarios.OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.Nombre)
+                .ToListAsync());
         }
 
  
@@ -43,7 +45,7 @@ namespace webBotica2.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool ExistUser = _context.Usuarios.Any(p => p.Usuario1.ToLower() == usuario.Usuario1.ToLower());
+                bool ExistUser = _context.Usuarios.Any(p => p.Usuario1.ToLower().Trim() == usuario.Usuario1.ToLower().Trim());
                 if ( ExistUser)
                 {
                     ModelState.AddModelError("Usuario1", "El usuario ya existe");
@@ -105,7 +107,7 @@ namespace webBotica2.Controllers
             {
                 try
                 {
-                    bool ExistUser = _context.Usuarios.Any(p => p.Usuario1.ToLower() == usuario.Usuario1.ToLower() && p.IdUser!=usuario.IdUser);
+                    bool ExistUser = _context.Usuarios.Any(p => p.Usuario1.ToLower().Trim() == usuario.Usuario1.ToLower().Trim() && p.IdUser!=usuario.IdUser);
                     if (ExistUser)
                     {
                         ModelState.AddModelError("Usuario1", "El usuario ya existe");

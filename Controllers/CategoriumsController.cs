@@ -24,7 +24,9 @@ public class CategoriumsController : Controller
     // GET: Categoriums
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Categoria.ToListAsync());
+        return View(await _context.Categoria.OrderByDescending(c => c.Estado)
+        .ThenBy(c => c.Nombre)
+        .ToListAsync());
     }
 
 

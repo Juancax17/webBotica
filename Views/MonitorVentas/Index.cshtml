@@ -1,6 +1,13 @@
 ﻿@model IEnumerable<Venta>
 
 @{
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,12 +18,12 @@
 
     <form method="get" asp-action="BuscarVenta" class="mb-3">
         <div class="row justify-content-xl-center">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <input type="text" name="filtro" class="form-control" placeholder="Buscar por DNI, RUC o ID de venta..." value="@ViewBag.Filtro" />
             </div>
 
             <div class="col-md-2">
-                <input type="date" name="fechaInicio" class="form-control" value="@ViewBag.FechaInicio" />
+                 <input type="date" name="fechaInicio" class="form-control" value="@ViewBag.FechaInicio" />
             </div>
 
             <div class="col-md-2">
@@ -36,6 +43,7 @@
         <table class="table table-hover align-middle table-bordered">
             <thead class="table-dark text-center">
                 <tr>
+                    <th>Numero de venta</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Total</th>
@@ -44,27 +52,37 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var venta in Model)
-                {
-                    <tr class="text-center">
-                        <td>@venta.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td>@venta.IdClienteNavigation?.Nombre</td>
-                        <td><strong>@venta.Total.ToString("C")</strong></td>
-                        <td>
-                            <span class="badge @(venta.EstadoVenta == "Pagado" ? "bg-success" :
-                                                                                                                venta.EstadoVenta == "Pendiente" ? "bg-warning text-dark" :
-                                                                                                                venta.EstadoVenta == "Cancelado" ? "bg-danger" : "bg-secondary")">
-                            @venta.EstadoVenta
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-@venta.IdVenta">
-                            Ver Detalle
-                        </button>
-                    </td>
-                </tr>
-                                }
-            </tbody>
+                <tbody>
+    @foreach (var venta in Model)
+    {
+        <tr class="text-center">
+            <th>@venta.IdVenta</th>
+            <td>@venta.Fecha.ToString("dd/MM/yyyy")</td>
+            <td>@venta.IdClienteNavigation?.Nombre</td>
+            <td><strong>@venta.Total.ToString("C")</strong></td>
+            <td>
+                <form method="post" asp-action="ActualizarEstadoVenta" class="d-flex justify-content-center align-items-center gap-1">
+                    <input type="hidden" name="IdVenta" value="@venta.IdVenta" />
+                                <select name="EstadoVenta" class="form-select form-select-sm" style="width: auto;">
+                                    <option value="Pagado" selected="@(venta.EstadoVenta == "Pagado")">Pagado</option>
+                                    <option value="Pendiente" selected="@(venta.EstadoVenta == "Pendiente")">Pendiente</option>
+                                    <option value="Cancelado" selected="@(venta.EstadoVenta == "Cancelado")">Cancelado</option>
+                                </select>
+
+                    <button type="submit" class="btn btn-sm btn-success" title="Guardar cambio de estado">💾</button>
+                </form>
+            </td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-@venta.IdVenta">
+                    Ver Detalle
+                </button>
+            </td>
+        </tr>
+    }
+</tbody>
+
+                                
+           
         </table>
     </div>
 
@@ -111,10 +129,40 @@
                             <div class="alert alert-warning text-center mt-3">No hay productos registrados en esta venta.</div>
                         }
                     </div>
-                    <div class="modal-footer">
-                        <span class="m-sm-auto fw-bold">Total: @venta.Total.ToString("C")</span>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Total: @venta.Total.ToString("C")</span>
+
+                        <div class="d-flex flex-column align-items-end">
+                            @{
+                                var comprobante = venta.Comprobantes.FirstOrDefault(c => c.IdVenta == venta.IdVenta);
+                                var yaEmitido = comprobante != null;
+                            }
+
+                            @if (!yaEmitido && venta.EstadoVenta == "Pagado")
+                            {
+                                <a asp-controller="Comprobantes" asp-action="CrearComprobante" asp-route-idVenta="@venta.IdVenta" class="btn btn-primary mb-2">
+                                    Generar Comprobante
+                                </a>
+                            }
+                            else if (yaEmitido)
+                            {
+                             <a asp-controller="Comprobantes" asp-action="GenerarPDF" asp-route-idComprobante="@comprobante.IdComprobante" class="btn btn-danger" target="_blank">
+                             Ver Comprobante
+                            </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary mb-2" disabled>Esperando pago</button>
+                            }
+
+                            <button type="button" class="btn btn-outline-secondary mt-1" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
                     </div>
+
+
+                    
                 </div>
             </div>
         </div>

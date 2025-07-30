@@ -22,7 +22,9 @@ namespace webBotica2.Controllers
         public async Task<IActionResult> Index()
         { 
             
-            return View(await _context.Rols.ToListAsync());
+            return View(await _context.Rols.OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.Rol1)
+                .ToListAsync());
         }
 
         

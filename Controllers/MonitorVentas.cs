@@ -18,7 +18,9 @@ namespace webBotica2.Controllers
         {
             var ventas = await _context.Ventas
                 .Include(v => v.IdClienteNavigation)
-                .Include(v => v.DetalleVenta)
+                .Include(v => v.Comprobantes)
+                .Include(v => v.Comprobantes)
+                .Include(v => v.DetalleVenta)                
                 .ThenInclude(d => d.IdProdNavigation)
                 .OrderByDescending(v => v.Fecha)
                 .ToListAsync();
@@ -72,6 +74,22 @@ namespace webBotica2.Controllers
 
             return View("Index", ventasFiltradas);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarEstadoVenta(int IdVenta, string EstadoVenta)
+        {
+            var venta = await _context.Ventas.FindAsync(IdVenta);
+            if (venta == null)
+                return NotFound();
+
+            venta.EstadoVenta = EstadoVenta;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+       
+
 
 
 

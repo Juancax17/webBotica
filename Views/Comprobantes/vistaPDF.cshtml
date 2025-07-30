@@ -1,0 +1,123 @@
+﻿@model webBotica2.Models.Comprobante
+@using webBotica2.Models
+@inject MiAngelitoContext _context
+@{
+    var parametros = _context.ParametrosGenerales.FirstOrDefault();
+    var logoRuta = parametros?.LogoSistema ?? "/img/default-logo.png";
+    var ruc = parametros.ruc.ToString();
+
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Comprobante PDF</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            margin: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 22px;
+            }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+            .info p {
+                margin: 4px 0;
+            }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <!-- Opcional: puedes poner tu logo aquí -->
+        <img src="@logoRuta" class="logo" style="height: 130px; width: 300px; " />
+        <h1>BOTICA SALUD Y ECONOMIA</h1>
+        <small>RUC: @ruc - Av. Principal 123, Chiclayo</small>
+    </div>
+
+    <div class="info">
+        <p><strong>Comprobante:</strong> @Model.Numero</p>
+        <p><strong>Fecha:</strong> @Model.Fecha.ToString()</p>
+        <p><strong>Tipo:</strong> @Model.Tipo</p>
+        <p><strong>Cliente:</strong> @Model.IdVentaNavigation.IdClienteNavigation.Nombre</p>
+        <p><strong>Documento:</strong> @Model.IdVentaNavigation.IdClienteNavigation.Documento</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detalle in Model.IdVentaNavigation.DetalleVenta)
+            {
+                <tr>
+                    <td>@detalle.IdProdNavigation.Nombre</td>
+                    <td>@detalle.Cant</td>
+                    <td>@detalle.PrecioVenta.ToString("C")</td>
+                    <td>S/ @(detalle.Cant* detalle.PrecioVenta)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p>
+            IGV: @((Model.Tipo == "Boleta") ? "S/ 0.00" : (Model.IdVentaNavigation.Total * 0.18m).ToString("C"))
+        </p>
+
+       
+        <p>Total: @Model.IdVentaNavigation.Total.ToString("C")</p>
+
+    </div>
+</body>
+</html>

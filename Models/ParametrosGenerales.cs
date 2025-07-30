@@ -29,7 +29,7 @@
         [Display(Name = "Días Mínimos para Vencimiento")]
         public int DiasVencimientoMinima { get; set; }
 
-        public byte[]? LogoSistema { get; set; }
+        public string? LogoSistema { get; set; }
 
         public bool modoOscuro { get; set; } = false;
     }

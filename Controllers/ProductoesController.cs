@@ -26,6 +26,8 @@ namespace webBotica2.Controllers
         .Include(p => p.IdMarcaNavigation)
         .Include(p => p.IdProveedorNavigation)
         .Include(p => p.IdLaboratorioNavigation)
+        .OrderByDescending(c => c.Estado)
+        .ThenBy(c => c.Nombre)
         .ToListAsync();
 
             return View(productos);

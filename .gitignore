@@ -1,0 +1,31 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.dbmdl
+*.log
+
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# ASP.NET secrets
+secrets.json
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Others
+*.vsidx
+*.swp
+*.DS_Store
+Thumbs.db

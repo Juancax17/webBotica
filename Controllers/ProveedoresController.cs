@@ -34,7 +34,9 @@ namespace webBotica2.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            return View(await proveedores.ToListAsync());
+            return View(await proveedores.OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.RazonSocial)
+                .ToListAsync());
         }
 
 
@@ -49,7 +51,7 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Ruc,RazonSocial,Tipo,Telefono,Correo,Estado")] Proveedore proveedore)
+        public async Task<IActionResult> Create([Bind("Ruc,RazonSocial,Telefono,Correo,Estado")] Proveedore proveedore)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +94,7 @@ namespace webBotica2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Ruc,RazonSocial,Tipo,Telefono,Correo,Estado")] Proveedore proveedore)
+        public async Task<IActionResult> Edit(int id, [Bind("IdProveedor,Ruc,RazonSocial,Telefono,Correo,Estado")] Proveedore proveedore)
         {
             if (id != proveedore.IdProveedor)
             {

@@ -24,7 +24,9 @@ namespace webBoticaAdmin.Controllers
 
            
 
-            return View(await _context.Laboratorios.ToListAsync());
+            return View(await _context.Laboratorios.OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.Nombre)
+                .ToListAsync());
         }
 
         // GET: Laboratorios/Create

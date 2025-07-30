@@ -15,6 +15,7 @@ public partial class MiAngelitoContext : DbContext
     {
     }
 
+
     public virtual DbSet<Categorium> Categoria { get; set; }
 
     public virtual DbSet<Cliente> Clientes { get; set; }
@@ -509,7 +510,6 @@ public partial class MiAngelitoContext : DbContext
                 .HasColumnName("dias_vencimiento_minima");
 
             entity.Property(e => e.LogoSistema)
-                .HasColumnType("bytea")
                 .HasColumnName("logo_sistema");
 
             entity.Property(e => e.modoOscuro)

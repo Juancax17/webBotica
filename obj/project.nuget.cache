@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "niYUFTwsw04=",
+  "dgSpecHash": "FP5O0j1EiVI=",
   "success": true,
   "projectFilePath": "C:\\Users\\HP\\OneDrive\\Desktop\\ProyectoWeb-C#\\webBotica-copia\\webBotica\\webBotica2.csproj",
   "expectedPackageFiles": [
@@ -112,6 +112,7 @@
     "C:\\Users\\HP\\.nuget\\packages\\nuget.projectmodel\\6.11.0\\nuget.projectmodel.6.11.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\rotativa.aspnetcore\\1.4.0\\rotativa.aspnetcore.1.4.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.composition\\7.0.0\\system.composition.7.0.0.nupkg.sha512",

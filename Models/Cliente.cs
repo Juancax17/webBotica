@@ -11,8 +11,7 @@ public partial class Cliente
     public int IdCliente { get; set; }
 
     [Required(ErrorMessage = "El Documento es obligatorio")]
-    [StringLength(12, ErrorMessage = "El Documento no puede tener más de 12 caracteres")]
-    [RegularExpression("^[0-9]+$", ErrorMessage = "El Documento debe contener solo números")]
+    [RegularExpression(@"^\d{8,11}$", ErrorMessage = "El Documento debe tener entre 8 y 11 dígitos numéricos")]
     public string Documento { get; set; } = null!;
 
     [Required(ErrorMessage = "El Nombre es obligatorio")]

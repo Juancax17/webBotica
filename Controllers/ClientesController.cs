@@ -21,7 +21,10 @@ namespace webBotica.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clientes.ToListAsync());
+             return View(await _context.Clientes
+                .OrderByDescending(c => c.Estado) 
+                .ThenBy(c => c.Nombre)            
+                .ToListAsync());
         }
 
        
@@ -43,21 +46,26 @@ namespace webBotica.Controllers
             {
                 var hoy = DateOnly.FromDateTime(DateTime.Today);
                 var fechaLimite = hoy.AddYears(-18);
+                var fechaLimite2 = hoy.AddYears(-100);
 
                 if (cliente.FechaNac > fechaLimite)
                 {
                     ModelState.AddModelError("FechaNac", "El cliente debe ser mayor de 18 años.");
                     return View(cliente);
+                } else if (cliente.FechaNac < fechaLimite2)
+                {
+                    ModelState.AddModelError("FechaNac", "La fecha de nacimiento no es creible");
+                    return View(cliente);
                 }
 
-                bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
+                    bool ExistCli = await _context.Clientes.AnyAsync(r => r.Documento == cliente.Documento);
 
                 if (ExistCli)
                 {
                     ModelState.AddModelError("Documento", "El Documento ya se encuentra registrado");
-                    return View(cliente); // <-- Interrumpe aquí
+                    return View(cliente); 
                 }
-
+               
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -100,10 +108,16 @@ namespace webBotica.Controllers
                 {
                     var hoy = DateOnly.FromDateTime(DateTime.Today);
                     var fechaLimite = hoy.AddYears(-18);
+                    var fechaLimite2 = hoy.AddYears(-100);
 
                     if (cliente.FechaNac > fechaLimite)
                     {
                         ModelState.AddModelError("FechaNac", "El cliente debe ser mayor de 18 años.");
+                        return View(cliente);
+                    }
+                    else if (cliente.FechaNac < fechaLimite2)
+                    {
+                        ModelState.AddModelError("FechaNac", "La fecha de nacimiento no es creíble");
                         return View(cliente);
                     }
 

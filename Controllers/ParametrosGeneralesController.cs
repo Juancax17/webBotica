@@ -55,15 +55,32 @@ namespace webBotica2.Controllers
             parametros.DiasVencimientoMinima = parametrosActualizados.DiasVencimientoMinima;
             parametros.modoOscuro = parametrosActualizados.modoOscuro;
 
-            // Si se subió un logo nuevo, lo guardamos
+
             if (Request.Form.Files["LogoSistema"] is IFormFile logo && logo.Length > 0)
             {
-                using (var ms = new MemoryStream())
+                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+                Directory.CreateDirectory(carpeta);
+
+                var nombreArchivo = "logo_sistema" + Path.GetExtension(logo.FileName);
+                var rutaArchivo = Path.Combine(carpeta, nombreArchivo);
+
+                // Eliminar archivo anterior si existe
+                if (System.IO.File.Exists(rutaArchivo))
                 {
-                    await logo.CopyToAsync(ms);
-                    parametros.LogoSistema = ms.ToArray();
+                    System.IO.File.Delete(rutaArchivo);
                 }
+
+                using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+                {
+                    await logo.CopyToAsync(stream);
+                }
+
+                parametros.LogoSistema = "/img/" + nombreArchivo;
             }
+
+
+
+
 
             await _context.SaveChangesAsync();
 

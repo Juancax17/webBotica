@@ -21,7 +21,7 @@ namespace webBotica2.Controllers
         {
             var model = new RegistrarVenta
             {
-                TipoDocumento = "DNI", // Valor por defecto
+                TipoDocumento = "DNI", 
                 TiposDocumento = new List<SelectListItem>
         {
             new SelectListItem { Text = "DNI", Value = "DNI" },
@@ -36,7 +36,7 @@ namespace webBotica2.Controllers
                     }).ToListAsync()
             };
 
-            // 🔽 ESTA ES LA CLAVE para que tu JS funcione
+            
             ViewBag.ProductosModal = await _context.Productos
                 .Where(p => p.Estado == true)
                 .Select(p => new ProductoVM
@@ -63,32 +63,9 @@ namespace webBotica2.Controllers
             {
                 TempData["error"] = "Hubo errores en el formulario. Por favor, verifica los datos ingresados.";
 
-                model.TiposDocumento = new List<SelectListItem>
-                {
-            new SelectListItem { Text = "DNI", Value = "DNI" },
-            new SelectListItem { Text = "RUC", Value = "RUC" }
-        };
-
-                model.Productos = await _context.Productos
-                    .Where(p => p.Estado == true)
-                    .Select(p => new SelectListItem
-                    {
-                        Text = p.Nombre,
-                        Value = p.IdProd.ToString()
-                    }).ToListAsync();
-
-                ViewBag.ProductosModal = await _context.Productos
-                .Where(p => p.Estado == true)
-                .Select(p => new ProductoVM
-                {
-                    Id = p.IdProd,
-                    Sku = p.Sku,
-                    Nombre = p.Nombre,
-                    Precio = p.PrecioVenta,
-                    Stock = p.Stock
-                }).ToListAsync();
-
+                await modalProductos(model);
                 return View(model);
+               
             }
 
             foreach (var item in model.Detalles)
@@ -99,112 +76,38 @@ namespace webBotica2.Controllers
                 {
                     TempData["error"] = prod.Nombre + " stock insuficiente";
 
-                    model.TiposDocumento = new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "DNI", Value = "DNI" },
-                    new SelectListItem { Text = "RUC", Value = "RUC" }
-                };
-
-                    model.Productos = await _context.Productos
-                        .Where(p => p.Estado == true)
-                        .Select(p => new SelectListItem
-                        {
-                            Text = p.Nombre,
-                            Value = p.IdProd.ToString()
-                        }).ToListAsync();
-
-                    ViewBag.ProductosModal = await _context.Productos
-                        .Where(p => p.Estado == true)
-                        .Select(p => new ProductoVM
-                        {
-                            Id = p.IdProd,
-                            Sku = p.Sku,
-                            Nombre = p.Nombre,
-                            Precio = p.PrecioVenta,
-                            Stock = p.Stock
-                        }).ToListAsync();
-
+                    await modalProductos(model);
                     return View(model);
+
                 }
             }
 
-           var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Documento == model.NumeroDocumento);
+            if (model.Detalles == null || !model.Detalles.Any())
+            {
+                TempData["error"] = "Debes agregar al menos un producto para registrar la venta.";
+
+                await modalProductos(model);
+                return View(model);
+            }
+
+            if (Request.Form["NombreCliente"] == "")
+            {
+                TempData["error"] = "Por Favor Primero Complete la información del cliente";
+
+                await modalProductos(model);
+                return View(model);
+            }
+
+
+
+            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Documento == model.NumeroDocumento);
 
             if (cliente == null)
             {
-                if (Request.Form["NombreCliente"]=="" )
-                {
-                    TempData["error"] = "Por Favor Primero Complete la información del cliente";
-
-                    model.TiposDocumento = new List<SelectListItem>
-                {
-            new SelectListItem { Text = "DNI", Value = "DNI" },
-            new SelectListItem { Text = "RUC", Value = "RUC" }
-        };
-
-                    model.Productos = await _context.Productos
-                        .Where(p => p.Estado == true)
-                        .Select(p => new SelectListItem
-                        {
-                            Text = p.Nombre,
-                            Value = p.IdProd.ToString()
-                        }).ToListAsync();
-
-                    ViewBag.ProductosModal = await _context.Productos
-                    .Where(p => p.Estado == true)
-                    .Select(p => new ProductoVM
-                    {
-                        Id = p.IdProd,
-                        Sku = p.Sku,
-                        Nombre = p.Nombre,
-                        Precio = p.PrecioVenta,
-                        Stock = p.Stock
-                    }).ToListAsync();
-
-                    return View(model);
-                }
-
-                foreach (var item in model.Detalles)
-                {
-                    var prod = await _context.Productos.FindAsync(item.IdProd);
-
-                    if (prod.Stock < item.Cant)
-                    {
-                        TempData["error"] = prod.Nombre + " stock insuficiente";
-
-                        model.TiposDocumento = new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "DNI", Value = "DNI" },
-                    new SelectListItem { Text = "RUC", Value = "RUC" }
-                };
-
-                        model.Productos = await _context.Productos
-                            .Where(p => p.Estado == true)
-                            .Select(p => new SelectListItem
-                            {
-                                Text = p.Nombre,
-                                Value = p.IdProd.ToString()
-                            }).ToListAsync();
-
-                        ViewBag.ProductosModal = await _context.Productos
-                            .Where(p => p.Estado == true)
-                            .Select(p => new ProductoVM
-                            {
-                                Id = p.IdProd,
-                                Sku = p.Sku,
-                                Nombre = p.Nombre,
-                                Precio = p.PrecioVenta,
-                                Stock = p.Stock
-                            }).ToListAsync();
-
-                        return View(model);
-                    }
-                }
-                
                 var nuevoCliente = new Cliente
                 {
 
-                    Documento = model.NumeroDocumento,
+                    Documento = model.NumeroDocumento.Trim(),
                     Nombre = Request.Form["NombreCliente"],
                     ApellidoPaterno = "",
                     ApellidoMaterno = "",
@@ -219,7 +122,6 @@ namespace webBotica2.Controllers
 
                 _context.Clientes.Add(nuevoCliente);
                 await _context.SaveChangesAsync();
-
             }
 
             var igv = await _context.ParametrosGenerales.Where(p => p.Id == 2).FirstOrDefaultAsync();
@@ -237,38 +139,6 @@ namespace webBotica2.Controllers
                 EstadoVenta = "Pendiente",      
                 Total = model.Detalles.Sum(d => d.Subtotal)
             };
-
-            if (model.Detalles == null || !model.Detalles.Any())
-            {
-                TempData["error"] = "Debes agregar al menos un producto para registrar la venta.";
-
-                model.TiposDocumento = new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "DNI", Value = "DNI" },
-                    new SelectListItem { Text = "RUC", Value = "RUC" }
-                };
-
-                model.Productos = await _context.Productos
-                    .Where(p => p.Estado == true)
-                    .Select(p => new SelectListItem
-                    {
-                        Text = p.Nombre,
-                        Value = p.IdProd.ToString()
-                    }).ToListAsync();
-
-                ViewBag.ProductosModal = await _context.Productos
-                    .Where(p => p.Estado == true)
-                    .Select(p => new ProductoVM
-                    {
-                        Id = p.IdProd,
-                        Sku = p.Sku,
-                        Nombre = p.Nombre,
-                        Precio = p.PrecioVenta,
-                        Stock = p.Stock
-                    }).ToListAsync();
-
-                return View(model);
-            }
 
             //  Añadir los detalles de la venta
             foreach (var item in model.Detalles)
@@ -320,7 +190,54 @@ namespace webBotica2.Controllers
             return Json(null);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ConsultarClienteLocal(string docu)
+        {
+            var cliente = await _context.Clientes
+                .Where(c => c.Documento == docu)
+                .Select(c => new
+                {
+                    nombre = c.Nombre,
+                    telefono = c.Telefono,
+                    correo = c.Correo
+                })
+                .FirstOrDefaultAsync();
 
+            if (cliente != null)
+            {
+                return Ok(cliente);
+            }
 
+            return NotFound();
+        }
+
+        private async Task modalProductos(RegistrarVenta model)
+        {
+            model.TiposDocumento = new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "DNI", Value = "DNI" },
+                    new SelectListItem { Text = "RUC", Value = "RUC" }
+                };
+
+            model.Productos = await _context.Productos
+                .Where(p => p.Estado == true)
+                .Select(p => new SelectListItem
+                {
+                    Text = p.Nombre,
+                    Value = p.IdProd.ToString()
+                }).ToListAsync();
+
+            ViewBag.ProductosModal = await _context.Productos
+                .Where(p => p.Estado == true)
+                .Select(p => new ProductoVM
+                {
+                    Id = p.IdProd,
+                    Sku = p.Sku,
+                    Nombre = p.Nombre,
+                    Precio = p.PrecioVenta,
+                    Stock = p.Stock
+                }).ToListAsync();
+        }
     }
+    
 }

@@ -17,7 +17,8 @@
 
                     <div class="mb-3">
                         <label asp-for="Documento" class="form-label">Documento</label>
-                        <input asp-for="Documento" class="form-control" />
+                        <input asp-for="Documento" class="form-control" maxlength="11"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                         <span asp-validation-for="Documento" class="text-danger"></span>
                     </div>
 
@@ -41,7 +42,8 @@
 
                     <div class="mb-3">
                         <label asp-for="Telefono" class="form-label">Teléfono</label>
-                        <input asp-for="Telefono" class="form-control" />
+                        <input asp-for="Telefono" class="form-control" maxlength="9"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                         <span asp-validation-for="Telefono" class="text-danger"></span>
                     </div>
 
@@ -61,11 +63,6 @@
                         <label asp-for="Direccion" class="form-label">Dirección</label>
                         <input asp-for="Direccion" class="form-control" />
                         <span asp-validation-for="Direccion" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" asp-for="Estado" />
-                        <label class="form-check-label" asp-for="Estado">Estado</label>
                     </div>
 
                     <div class="form-check mb-4">
