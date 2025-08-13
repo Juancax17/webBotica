@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 using System;
@@ -44,8 +44,13 @@ RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
     await next();
+
+    if (context.Response.ContentType != null &&
+        context.Response.ContentType.Contains("text/html", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.ContentType = "text/html; charset=utf-8";
+    }
 });
 
 // ─────────────── Pipeline ───────────────
@@ -54,6 +59,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Shared/Error");
     app.UseHsts();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
