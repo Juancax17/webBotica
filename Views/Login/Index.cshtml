@@ -12,51 +12,91 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- FontAwesome (opcional para íconos) -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
-    <!-- Tu propio CSS si lo necesitas -->
-    <link href="~/css/sb-admin-2.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f9fc;
+            background-image: radial-gradient(circle at 1px 1px, #e3e6f0 1px, transparent 0);
+            background-size: 20px 20px; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 450px; 
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0px 4px 30px rgba(0,0,0,0.12);
+        }
+        .login-title {
+            font-weight: 700;
+            color: #4e73df;
+            margin-bottom: 1.8rem;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding-left: 40px;
+            height: 48px;
+        }
+        .btn-custom {
+            background: #4e73df;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            padding: 0.9rem;
+            font-size: 1rem;
+        }
+        .btn-custom:hover {
+            background: #2e59d9;
+        }
+        .icon-input {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .form-group {
+            position: relative;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
-            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+    <div class="login-container">
+        <h3 class="text-center login-title">Iniciar Sesión</h3>
 
-            @using (Html.BeginForm())
-            {
-                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-                <div class="form-group mb-3">
-                    @Html.LabelFor(m => m.username, htmlAttributes: new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.username, new { @class = "form-control", @placeholder = "Ingrese su usuario" })
-                    @Html.ValidationMessageFor(m => m.username, "", new { @class = "text-danger" })
-                </div>
+            <div class="form-group mb-3">
+                <i class="fas fa-user icon-input"></i>
+                @Html.TextBoxFor(m => m.username, new { @class = "form-control", @placeholder = "Usuario" })
+                @Html.ValidationMessageFor(m => m.username, "", new { @class = "text-danger" })
+            </div>
 
-                <div class="form-group mb-3">
-                    @Html.LabelFor(m => m.password, htmlAttributes: new { @class = "form-label" })
-                    @Html.PasswordFor(m => m.password, new { @class = "form-control", @placeholder = "Ingrese su contraseña" })
-                    @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger" })
-                </div>
+            <div class="form-group mb-4">
+                <i class="fas fa-lock icon-input"></i>
+                @Html.PasswordFor(m => m.password, new { @class = "form-control", @placeholder = "Contraseña" })
+                @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger" })
+            </div>
 
-                <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-                </div>
-            }
-        </div>
+            <button type="submit" class="btn btn-custom w-100">Ingresar</button>
+        }
+
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- jQuery Validation (si usas validaciones client-side) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
-
 </body>
 </html>

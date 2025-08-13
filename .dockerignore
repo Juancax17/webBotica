@@ -1,0 +1,49 @@
+# Archivos de configuración de Git
+.git
+.gitignore
+
+# Archivos de usuario y de Visual Studio
+.vs
+*.user
+*.suo
+*.cache
+*.dbmdl
+*.log
+
+# Archivos temporales y resultados de compilación
+bin
+obj
+out
+publish
+app.publish
+
+# Configuración local
+appsettings.Development.json
+appsettings.Local.json
+
+# Configuración de IDEs
+.vscode
+.idea
+
+# Paquetes NuGet descargados localmente
+*.nupkg
+**/packages
+
+# Librerías front-end que se restauran con npm o LibMan
+wwwroot/lib
+
+# Archivos de Docker innecesarios
+Dockerfile.develop
+docker-compose.override.yml
+docker-compose.override.*
+
+# Archivos temporales de Rotativa
+wwwroot/Rotativa/temp
+
+# Otros
+*.vsidx
+*.swp
+*.DS_Store
+Thumbs.db
+logs
+log

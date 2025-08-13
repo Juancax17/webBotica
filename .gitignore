@@ -9,12 +9,17 @@
 # Build results
 bin/
 obj/
+out/
 *.dll
 *.exe
 *.pdb
+*.app
+*.appsettings.development.json
+*.appsettings.local.json
 
 # ASP.NET secrets
 secrets.json
+**/secrets.json
 
 # User-specific files
 *.user
@@ -24,8 +29,32 @@ secrets.json
 # Rider
 .idea/
 
-# Others
+# VS Code
+.vscode/
+.history/
+
+# NuGet packages
+*.nupkg
+**/packages/*
+
+# Publish folder (cuando haces dotnet publish)
+publish/
+app.publish/
+**/wwwroot/lib/
+
+# Docker
+**/Dockerfile.develop
+**/docker-compose.override.yml
+**/docker-compose.override.*
+
+# Logs
 *.vsidx
 *.swp
 *.DS_Store
 Thumbs.db
+*.log
+logs/
+log/
+
+# Rotativa PDFs temporales
+wwwroot/Rotativa/temp/
