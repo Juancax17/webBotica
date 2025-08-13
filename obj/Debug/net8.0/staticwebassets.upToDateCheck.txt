@@ -1,7 +1,6 @@
 wwwroot\css\sb-admin-2.css
 wwwroot\css\sb-admin-2.min.css
 wwwroot\favicon.ico
-wwwroot\img\360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg
 wwwroot\img\jorgito.png
 wwwroot\img\logoSistema.png
 wwwroot\img\logo_sistema.png
@@ -18,6 +17,7 @@ wwwroot\js\demo\datatables-demo.js
 wwwroot\js\sb-admin-2.js
 wwwroot\js\sb-admin-2.min.js
 wwwroot\Rotativa\wkhtmltoimage.exe
+wwwroot\Rotativa\wkhtmltopdf
 wwwroot\Rotativa\wkhtmltopdf.exe
 wwwroot\scss\navs\_global.scss
 wwwroot\scss\navs\_sidebar.scss

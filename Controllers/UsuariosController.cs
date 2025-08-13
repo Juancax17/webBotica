@@ -21,13 +21,16 @@ namespace webBotica2.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            var miAngelitoContext = _context.Usuarios.Include(p => p.IdRolNavigation);
-            return View(await _context.Usuarios.OrderByDescending(c => c.Estado)
+            var usuarios = await _context.Usuarios
+                .Include(p => p.IdRolNavigation) 
+                .OrderByDescending(c => c.Estado)
                 .ThenBy(c => c.Nombre)
-                .ToListAsync());
+                .ToListAsync();
+
+            return View(usuarios);
         }
 
- 
+
 
         // GET: Usuarios/Create
         public IActionResult Create()

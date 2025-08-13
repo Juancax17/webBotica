@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 [AllowAnonymous]
 public class LoginController : Controller
@@ -26,8 +27,8 @@ public class LoginController : Controller
         if (!ModelState.IsValid)
             return View("Index", lg);
 
-        var usuario = _db.Usuarios
-                         .FirstOrDefault(u => u.Usuario1 == lg.username &&
+        var usuario = _db.Usuarios.Include(p =>p.IdRolNavigation)
+                         .FirstOrDefault(u => u.Usuario1 == lg.username.Trim() &&
                                               u.Contraseña == lg.password);
 
 
@@ -45,15 +46,22 @@ public class LoginController : Controller
         // Guardar datos en sesión
         HttpContext.Session.SetString("User", usuario.Usuario1);
         HttpContext.Session.SetString("Nombre", usuario.Nombre);
+        HttpContext.Session.SetString("Rol", usuario.IdRolNavigation.Rol1.ToLower().Trim());
 
-        // Crear cookie de autenticación
-        var claims = new[] { new Claim(ClaimTypes.Name, usuario.Usuario1) };
+        var claims = new[]
+{
+    new Claim(ClaimTypes.Name, usuario.Usuario1),
+    new Claim(ClaimTypes.Role, usuario.IdRolNavigation.Rol1) 
+};
+
+       
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
 
+       
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-        return RedirectToAction("Index", "DashBoard");  // o "Dashboard", si lo prefieres
+        return RedirectToAction("Index", "Home");  
     }
 
     public async Task<IActionResult> Logout()

@@ -34,11 +34,19 @@ builder.Services
         opts.SlidingExpiration = true;
     });
 
+
+
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
+    await next();
+});
 
 // ─────────────── Pipeline ───────────────
 if (!app.Environment.IsDevelopment())

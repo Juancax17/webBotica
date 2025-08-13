@@ -7,20 +7,17 @@
 
 <h2 class="text-center mb-4">Lista de Productos</h2>
 
-<div class="d-flex justify-content-start mb-3">
-    <a class="btn btn-success btn-sm" asp-action="Create">
-        <i class="bi bi-plus-circle-fill"></i> Registrar Producto
-    </a>
-</div>
-
-<form asp-action="Index" method="get" class="mb-3 d-flex">
+<form asp-action="VistaEmpleados" method="get" class="mb-3 d-flex">
     <input type="text" name="searchString" class="form-control me-2"
            placeholder="Buscar por código o nombre..."
            value="@Context.Request.Query["searchString"]" />
     <button type="submit" class="btn btn-primary">Buscar</button>
 
-    <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+    <a asp-action="VistaEmpleados" class="btn btn-secondary">Limpiar</a>
 </form>
+
+
+
 
 <table class="table table-bordered table-hover table-striped align-middle text-center shadow-sm" style="font-size: 13px;">
     <thead class="table-success">
@@ -38,7 +35,7 @@
             <th>Proveedor</th>
             <th>Laboratorio</th>
             <th>Estado</th>
-            <th>Acciones</th>
+            
         </tr>
     </thead>
     <tbody>
@@ -51,25 +48,14 @@
                 <td>@item.PrecioCompra.ToString("C")</td>
                 <td>@item.PrecioVenta.ToString("C")</td>
                 <td>@item.FechaVen.ToString("dd/MM/yyyy")</td>
-                <td>@item.Stock</td>
+                <td>@item.Stock</td>-
                 <td>@item.StockMinimo</td>
                 <td>@item.IdCategoriaNavigation.Nombre</td>
                 <td>@item.IdMarcaNavigation.Nombre</td>
                 <td>@item.IdProveedorNavigation.RazonSocial</td>
                 <td>@item.IdLaboratorioNavigation.Nombre</td>
                 <td>
-                 @(item.Estado ? "✅" : "❌")
-                <td>
-                    <a class="btn btn-sm btn-primary me-1" asp-action="Edit" asp-route-id="@item.IdProd">
-                        <i class="bi bi-pencil-square"></i> Editar
-                    </a>
-                    <form class="d-inline" asp-action="Delete" asp-route-id="@item.IdProd" method="post"
-                          onsubmit="return confirm('¿Está seguro de @(item.Estado ? "deshabilitar" : "habilitar") este laboratorio?');">
-                        <button type="submit" class="btn btn-sm @(item.Estado ? "btn-danger" : "btn-success")">
-                            <i class="bi @(item.Estado ? "bi-x-circle" : "bi-check-circle")"></i>
-                            @(item.Estado ? "Deshabilitar" : "Habilitar")
-                        </button>
-                    </form>
+                    @(item.Estado ? "✅" : "❌")
                 </td>
             </tr>
         }

@@ -19,21 +19,53 @@ namespace webBotica2.Controllers
         }
 
         // GET: Productoes
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string searchString)
         {
-            var productos = await _context.Productos
-        .Include(p => p.IdCategoriaNavigation)
-        .Include(p => p.IdMarcaNavigation)
-        .Include(p => p.IdProveedorNavigation)
-        .Include(p => p.IdLaboratorioNavigation)
-        .OrderByDescending(c => c.Estado)
-        .ThenBy(c => c.Nombre)
-        .ToListAsync();
+            var query = _context.Productos
+                .Include(p => p.IdCategoriaNavigation)
+                .Include(p => p.IdMarcaNavigation)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.IdLaboratorioNavigation)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => p.Nombre.Contains(searchString)
+                                       || p.Sku.Contains(searchString));
+            }
+
+            var productos = await query
+                .OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.Nombre)
+                .ToListAsync();
 
             return View(productos);
-
-
         }
+
+        public async Task<IActionResult> VistaEmpleados(string searchString)
+        {
+            var query = _context.Productos
+                .Include(p => p.IdCategoriaNavigation)
+                .Include(p => p.IdMarcaNavigation)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.IdLaboratorioNavigation)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => p.Nombre.Contains(searchString)
+                                       || p.Sku.Contains(searchString));
+            }
+
+            var productos = await query
+                .OrderByDescending(c => c.Estado)
+                .ThenBy(c => c.Nombre)
+                .ToListAsync();
+
+            return View(productos);
+        }
+
 
 
 
@@ -200,5 +232,7 @@ namespace webBotica2.Controllers
         {
             return _context.Productos.Any(e => e.IdProd == id);
         }
+
+        
     }
 }

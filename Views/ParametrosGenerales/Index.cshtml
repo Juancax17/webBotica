@@ -84,21 +84,20 @@
                     @if (!string.IsNullOrEmpty(Model.LogoSistema))
                     {
                         var logoPath = Url.Content( Model.LogoSistema);
-                        <img id="logoPreview" src="@logoPath" alt="Logo actual" class="img-thumbnail" style="max-width: 150px;" />
+                        <img id="logoPreview"
+                             src="@Url.Content(Model.LogoSistema + "?v=" + DateTime.Now.Ticks)"
+                             alt="Logo del sistema"
+                             class="img-thumbnail"
+                             style="max-width: 150px;" />
                     }
                     else
                     {
                         <img id="logoPreview" src="" alt="Vista previa del logo" class="img-thumbnail d-none" style="max-width: 150px;" />
                     }
                 </div>
-
-                @* Modo oscuro *@
-                <div class="form-check form-switch mb-4">
-                    <input asp-for="modoOscuro" class="form-check-input" type="checkbox" role="switch" id="modoOscuroSwitch">
-                    <label asp-for="modoOscuro" class="form-check-label" for="modoOscuroSwitch">Activar modo oscuro</label>
-                </div>
-
-                <div class="d-grid">
+                <br />
+                
+                <div class="d-grid" style="text-align:center">
                     <button type="submit" class="btn btn-primary rounded-3">
                         <i class="fa-solid fa-save me-2"></i> Guardar parámetros
                     </button>
